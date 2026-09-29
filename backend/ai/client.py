@@ -43,33 +43,34 @@ TOKEN_DETAIL_FIELDS = {
     "video_tokens",
 }
 ERROR_MESSAGES = {
-    "not_configured": "MiMo is not configured. Use manual entry or contact the administrator.",
-    "invalid_configuration": "MiMo configuration is invalid. Contact the administrator.",
-    "invalid_request": "The model request or media format is invalid.",
-    "timeout": "MiMo timed out. Try again later.",
-    "connection_error": "MiMo could not be reached. Try again later.",
-    "transport_error": "The MiMo request could not be completed.",
-    "authentication_failed": "MiMo authentication failed. Contact the administrator.",
-    "insufficient_balance": "MiMo balance is insufficient. Use manual entry or contact an admin.",
-    "permission_denied": "MiMo access was denied. Contact the administrator.",
-    "unsupported_model": "The configured MiMo model or endpoint is unavailable.",
-    "content_filtered": "MiMo did not return content. Revise the input or use manual entry.",
-    "rate_limited": "MiMo is rate limited. Try again later.",
-    "temporarily_unavailable": "MiMo is temporarily unavailable. Try again later.",
-    "provider_error": "MiMo rejected the request. Use manual entry or contact the administrator.",
-    "invalid_response": "MiMo returned an invalid response. Review the input or use manual entry.",
-    "output_truncated": "MiMo output was truncated. Reduce the input or increase the output limit.",
-    "invalid_json": "MiMo returned an invalid JSON object. Review the input or use manual entry.",
-    "submission_unknown": "MiMo submission status is unknown. Check the task before retrying.",
-    "batch_not_configured": "MiMo Batch is not configured. Contact the administrator.",
-    "invalid_batch_request": "The MiMo Batch request is invalid.",
-    "invalid_batch_file": "The MiMo Batch file is invalid.",
-    "invalid_batch_response": "MiMo Batch returned an invalid response.",
-    "invalid_jsonl": "The MiMo Batch file is not valid JSONL.",
-    "batch_file_too_large": "The MiMo Batch file is too large. Submit a smaller batch.",
-    "invalid_identifier": "The MiMo Batch resource identifier is invalid.",
-    "network_error": "MiMo could not be reached. Try again later.",
-    "authentication_error": "MiMo authentication failed. Contact the administrator.",
+    "not_configured": "尚未配置 MiMo 服务，您可以手工录入或联系管理员。",
+    "invalid_configuration": "MiMo 服务配置无效，请联系管理员。",
+    "invalid_request": "请求或图片、音频格式无效，请检查输入后重试。",
+    "timeout": "MiMo 服务响应超时，请稍后重试。",
+    "connection_error": "暂时无法连接 MiMo 服务，请稍后重试。",
+    "transport_error": "无法完成 MiMo 服务请求，请联系管理员或手工录入。",
+    "authentication_failed": "MiMo 服务认证失败，请联系管理员。",
+    "insufficient_balance": "MiMo 服务余额不足，您可以手工录入或联系管理员。",
+    "permission_denied": "MiMo 服务拒绝访问，请联系管理员。",
+    "unsupported_model": "当前配置的 MiMo 模型或接口不可用，请联系管理员。",
+    "content_filtered": "MiMo 服务未返回内容，请调整输入或手工录入。",
+    "rate_limited": "MiMo 服务请求过于频繁，请稍后重试。",
+    "temporarily_unavailable": "MiMo 服务暂时不可用，请稍后重试。",
+    "provider_error": "MiMo 服务拒绝了请求，您可以手工录入或联系管理员。",
+    "invalid_response": "MiMo 服务返回的结果无效，请检查输入或手工录入。",
+    "output_truncated": "MiMo 服务返回的内容不完整，请减少输入或联系管理员调整输出上限。",
+    "invalid_json": "MiMo 服务返回的资料格式无效，请检查输入或手工录入。",
+    "invalid_extraction": "识别结果无效，请检查照片或改为手工录入。",
+    "submission_unknown": "无法确认 MiMo 任务是否已提交，请先查看任务状态，避免重复提交。",
+    "batch_not_configured": "尚未配置 MiMo 批量识别服务，请联系管理员。",
+    "invalid_batch_request": "MiMo 批量识别请求无效，请检查输入或联系管理员。",
+    "invalid_batch_file": "MiMo 批量识别文件无效，请联系管理员。",
+    "invalid_batch_response": "MiMo 批量识别返回的结果无效，请联系管理员。",
+    "invalid_jsonl": "MiMo 批量识别文件格式无效，请联系管理员。",
+    "batch_file_too_large": "MiMo 批量识别文件过大，请减少本次提交的数量。",
+    "invalid_identifier": "MiMo 批量识别任务或文件编号无效，请联系管理员。",
+    "network_error": "暂时无法连接 MiMo 服务，请稍后重试。",
+    "authentication_error": "MiMo 服务认证失败，请联系管理员。",
 }
 
 
@@ -78,9 +79,10 @@ class ModelAPIError(Exception):
 
     retryable describes a future user/worker retry, not permission to retry forever.
     usage retains only known numeric token counters when a billed result is invalid.
+    The optional legacy message argument is ignored; only fixed safe messages are used.
     """
 
-    def __init__(self, code, *, retryable=False, status_code=None, usage=None):
+    def __init__(self, code, message=None, *, retryable=False, status_code=None, usage=None):
         self.code = code if isinstance(code, str) and code in ERROR_MESSAGES else "provider_error"
         self.message = ERROR_MESSAGES[self.code]
         self.retryable = retryable

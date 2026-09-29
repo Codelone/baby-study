@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 import requests
 from django.test import SimpleTestCase, override_settings
 
-from .client import MimoClient, ModelAPIError, validate_chat_response
+from .client import ERROR_MESSAGES, MimoClient, ModelAPIError, validate_chat_response
 
 
 def completion(content="A response", finish_reason="stop", usage=True):
@@ -479,6 +479,47 @@ class MimoClientTests(SimpleTestCase):
         error = ModelAPIError("private credential/vendor text")
         self.assertEqual(error.code, "provider_error")
         self.assertNotIn("private credential", str(error))
+
+    def test_legacy_message_is_accepted_but_never_exposed(self):
+        for code in ("invalid_response", "invalid_extraction", "submission_unknown", "unknown"):
+            with self.subTest(code=code):
+                for error in (
+                    ModelAPIError(
+                        code,
+                        "private credential/vendor text",
+                        retryable=False,
+                        status_code=200,
+                        usage={"total_tokens": 35},
+                    ),
+                    ModelAPIError(
+                        code,
+                        message="private credential/vendor text",
+                        retryable=False,
+                        status_code=200,
+                        usage={"total_tokens": 35},
+                    ),
+                ):
+                    expected_code = code if code in ERROR_MESSAGES else "provider_error"
+                    self.assertEqual(error.code, expected_code)
+                    self.assertEqual(error.message, ERROR_MESSAGES[expected_code])
+                    self.assertEqual(error.args, (error.message,))
+                    self.assertFalse(error.retryable)
+                    self.assertEqual(error.status_code, 200)
+                    self.assertEqual(error.usage, {"total_tokens": 35})
+                    self.assertNotIn("private credential", str(error))
+                    self.assertNotIn("private credential", repr(error))
+
+    def test_all_error_messages_include_chinese_feedback(self):
+        for code in ERROR_MESSAGES:
+            with self.subTest(code=code):
+                self.assertRegex(ModelAPIError(code).message, "[\\u4e00-\\u9fff]")
+
+    def test_invalid_extraction_preserves_code_and_offers_manual_entry(self):
+        error = ModelAPIError("invalid_extraction", "private invalid payload")
+        self.assertEqual(error.code, "invalid_extraction")
+        self.assertFalse(error.retryable)
+        self.assertIn("手工录入", error.message)
+        self.assertNotIn("private invalid payload", str(error))
 
     def test_batch_error_codes_are_preserved_with_fixed_safe_messages(self):
         for code in (
