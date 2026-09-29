@@ -12,3 +12,5 @@ backend/staticfiles/
 *.sqlite3
 imports/.cache/
 imports/baseline-catalog.json
+API_KEY
+backend/private-media/

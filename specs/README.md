@@ -56,7 +56,7 @@ specs/
 | 001 | Spec 与 Plan 维护流程 | implemented | v0.1 | [spec](001-spec-plan-workflow/spec.md) | [plan](001-spec-plan-workflow/plan.md) |
 | 002 | 系列分组与批量加入书架 | implemented | v0.1 | [spec](002-series-shelf/spec.md) | [plan](002-series-shelf/plan.md) |
 | 003 | 图书资料重设计与全表联网补全 | implemented | v0.1 | [spec](003-catalog-enrichment/spec.md) | [plan](003-catalog-enrichment/plan.md) |
-| 004 | 系统图书管理、拍照录入与 MiMo 模型接入 | ready | v0.4 | [spec](004-catalog-management-ai/spec.md) | [plan](004-catalog-management-ai/plan.md) |
+| 004 | 系统图书管理、拍照录入与 MiMo 模型接入 | in-progress | v0.5 | [spec](004-catalog-management-ai/spec.md) | [plan](004-catalog-management-ai/plan.md) |
 
 2026-09-29：003 已追加后续新增图书联网能力的澄清。当前新增图书不自动联网；系统内检索候选并确认版本的入口为 Agent 建议，尚未确认或实施，v0.1 范围和状态不变。
 
@@ -67,3 +67,5 @@ specs/
 2026-09-29 第二轮确认：004 更新为 v0.3。自动分组后统一确认入库、疑点可纠正；每张照片主要拍一本；所有图书识别默认 Batch，可切换实时。模型能力接入与 Agent UI 的阶段边界继续讨论，开发尚未开始。
 
 2026-09-29 第三轮确认：004 更新为 v0.4/ready。本期实际接通验证文字、图片、音频理解，家长 Agent 交互界面后续做。规格、功能拆分及会话分工已记录；尚未创建开发会话或实施业务功能，所有业务验收未执行。
+
+2026-09-29 开发启动：004 v0.5/in-progress。用户已提交代码基线并提供密钥文件，授权多个会话并发开发，当前主会话负责问题确认与集成。公共契约已建立，业务验收尚未完成。

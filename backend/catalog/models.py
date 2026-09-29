@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 
@@ -84,8 +86,9 @@ class Book(models.Model):
         "记录状态",
         max_length=16,
         default="active",
-        choices=(("active", "实际读物"), ("legacy", "历史导入映射")),
+        choices=(("active", "实际读物"), ("legacy", "历史导入映射"), ("archived", "已归档")),
     )
+    archived_at = models.DateTimeField("归档时间", null=True, blank=True)
     manual_fields = models.JSONField("禁止自动覆盖的字段", default=list, blank=True)
 
     class Meta:
@@ -167,8 +170,18 @@ class SourceEvidence(models.Model):
     )
     field = models.CharField("字段", max_length=100)
     value = models.JSONField("来源声明")
-    source_url = models.URLField("出处", max_length=1000)
+    source_url = models.URLField("出处", max_length=1000, blank=True)
     source_label = models.CharField(max_length=255, blank=True)
+    origin_kind = models.CharField(
+        max_length=16,
+        choices=(("web", "网页来源"), ("manual", "人工录入"), ("photo", "照片识别")),
+        default="web",
+    )
+    photo = models.ForeignKey("IntakePhoto", null=True, blank=True, on_delete=models.SET_NULL)
+    model_name = models.CharField(max_length=100, blank=True)
+    confirmed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
+    )
     status = models.CharField(
         max_length=16,
         default="confirmed",
@@ -197,6 +210,68 @@ class SourceEvidence(models.Model):
             ),
         ]
         ordering = ("field", "id")
+
+
+class BookIntake(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    mode = models.CharField(
+        max_length=16, choices=(("batch", "省钱批量"), ("realtime", "实时")), default="batch"
+    )
+    status = models.CharField(max_length=32, default="queued")
+    revision = models.PositiveIntegerField(default=1)
+    generation = models.PositiveIntegerField(default=1)
+    groups = models.JSONField(default=list, blank=True)
+    unassigned_photo_ids = models.JSONField(default=list, blank=True)
+    errors = models.JSONField(default=list, blank=True)
+    progress = models.JSONField(default=dict, blank=True)
+    confirmed_books = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+
+def intake_photo_path(instance, filename):
+    # UUID paths never expose a user supplied filename or create a public media URL.
+    return f"intakes/{instance.intake_id}/{instance.id}.jpg"
+
+
+class IntakePhoto(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    intake = models.ForeignKey(BookIntake, on_delete=models.CASCADE, related_name="photos")
+    file = models.FileField(upload_to=intake_photo_path)
+    original_name = models.CharField(max_length=255)
+    sha256 = models.CharField(max_length=64)
+    status = models.CharField(max_length=16, default="pending")
+    extraction = models.JSONField(default=dict, blank=True)
+    error = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("created_at", "id")
+        constraints = [
+            models.UniqueConstraint(fields=("intake", "sha256"), name="unique_intake_photo_hash")
+        ]
+
+
+class IntakeBatch(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    intake = models.ForeignKey(BookIntake, on_delete=models.CASCADE, related_name="batches")
+    generation = models.PositiveIntegerField(default=1)
+    status = models.CharField(max_length=32, default="submitting")
+    input_file_id = models.CharField(max_length=255, blank=True)
+    provider_batch_id = models.CharField(max_length=255, blank=True)
+    output_file_id = models.CharField(max_length=255, blank=True)
+    error_file_id = models.CharField(max_length=255, blank=True)
+    requests = models.JSONField(default=list, blank=True)
+    errors = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("created_at",)
 
 
 class ShelfItem(models.Model):
