@@ -85,3 +85,17 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "EXCEPTION_HANDLER": "catalog.api_errors.exception_handler",
 }
+
+# Server-only MiMo credentials. Batch uses its own regional endpoint, never a fallback.
+MIMO_API_KEY = os.environ.get("MIMO_API_KEY", "")
+MIMO_BASE_URL = os.environ.get("MIMO_BASE_URL", "https://api.xiaomimimo.com/v1")
+MIMO_BATCH_BASE_URL = os.environ.get("MIMO_BATCH_BASE_URL", "")
+MIMO_TEXT_MODEL = os.environ.get("MIMO_TEXT_MODEL", "mimo-v2.6-flash")
+MIMO_IMAGE_MODEL = os.environ.get("MIMO_IMAGE_MODEL", "mimo-v2.6-flash")
+MIMO_AUDIO_MODEL = os.environ.get("MIMO_AUDIO_MODEL", "mimo-v2.6-flash")
+MIMO_TIMEOUT_SECONDS = float(os.environ.get("MIMO_TIMEOUT_SECONDS", "60"))
+MIMO_CONNECT_TIMEOUT_SECONDS = float(os.environ.get("MIMO_CONNECT_TIMEOUT_SECONDS", "10"))
+MIMO_MAX_RETRIES = int(os.environ.get("MIMO_MAX_RETRIES", "2"))
+MIMO_RETRY_BACKOFF_SECONDS = float(os.environ.get("MIMO_RETRY_BACKOFF_SECONDS", "1"))
+MIMO_RETRY_MAX_DELAY_SECONDS = float(os.environ.get("MIMO_RETRY_MAX_DELAY_SECONDS", "30"))
+MIMO_MAX_COMPLETION_TOKENS = int(os.environ.get("MIMO_MAX_COMPLETION_TOKENS", "4096"))
