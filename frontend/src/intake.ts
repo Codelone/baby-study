@@ -153,6 +153,16 @@ export type Intake = {
   confirmed_books: ConfirmedBook[]
   created_at: string
   updated_at: string
+  cost_estimate?: {
+    currency: 'CNY'
+    amount: string | null
+    priced_photos: number
+    total_photos: number
+    pricing_date: string
+    source_url: string
+    assumption: 'uncached_input'
+    mode: 'batch' | 'realtime'
+  }
 }
 export type Candidate = {
   id: string

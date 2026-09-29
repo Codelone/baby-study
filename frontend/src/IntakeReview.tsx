@@ -36,7 +36,21 @@ const photoLabels: Record<string, string> = {
   other: '其他照片',
 }
 
-function UsageSummary({ photos }: { photos: IntakePhoto[] }) {
+function UsageSummary({ intake }: { intake: Intake }) {
+  const { photos, cost_estimate: estimate } = intake
+  const rawAmount = estimate?.amount
+  const amount =
+    typeof rawAmount === 'string' && /^\d+(?:\.\d+)?$/.test(rawAmount)
+      ? Number(rawAmount)
+      : null
+  const formattedAmount =
+    amount !== null && Number.isFinite(amount)
+      ? amount.toLocaleString('zh-CN', {
+          useGrouping: false,
+          minimumFractionDigits: 6,
+          maximumFractionDigits: 8,
+        })
+      : null
   const metrics = [
     ['prompt_tokens', '输入 tokens'],
     ['completion_tokens', '输出 tokens'],
@@ -84,6 +98,32 @@ function UsageSummary({ photos }: { photos: IntakePhoto[] }) {
         仅汇总照片结果中已返回的用量，暂无数据不代表零消耗。失败项、未完成项及重试等调用的已消耗用量可能未包含在内；费用以
         MiMo 账单为准。
       </p>
+      <div className="config-notice">
+        <p>
+          <strong>
+            已返回用量的费用估算：
+            {formattedAmount === null
+              ? '暂无可估算用量'
+              : '约 ¥' + formattedAmount}
+          </strong>
+        </p>
+        {estimate && (
+          <p>
+            仅覆盖 {estimate.priced_photos}/{estimate.total_photos} 张照片 ·{' '}
+            {estimate.mode === 'batch' ? 'Batch' : '实时'} · 价格日期{' '}
+            {estimate.pricing_date}{' '}
+            {/^https:\/\//i.test(estimate.source_url) && (
+              <a href={estimate.source_url} target="_blank" rel="noreferrer">
+                官方价格说明 ↗
+              </a>
+            )}
+          </p>
+        )}
+        <p>
+          输入按未命中缓存计算，费用估算仅包含上述覆盖项。失败项、未完成项及重试等调用的消耗可能未计入；此估算不是最终账单，费用以
+          MiMo 账单为准。
+        </p>
+      </div>
     </section>
   )
 }
@@ -806,7 +846,7 @@ export default function IntakeReview({
           </p>
         </>
       )}
-      <UsageSummary photos={intake.photos} />
+      <UsageSummary intake={intake} />
       {error && (
         <p className="error-banner" role="alert">
           {error}
