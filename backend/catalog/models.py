@@ -193,12 +193,12 @@ class SourceEvidence(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=("book", "field", "source_url", "status"),
-                condition=models.Q(book__isnull=False),
+                condition=models.Q(book__isnull=False, origin_kind="web"),
                 name="unique_book_evidence_claim",
             ),
             models.UniqueConstraint(
                 fields=("series", "field", "source_url", "status"),
-                condition=models.Q(series__isnull=False),
+                condition=models.Q(series__isnull=False, origin_kind="web"),
                 name="unique_series_evidence_claim",
             ),
             models.CheckConstraint(
@@ -226,6 +226,8 @@ class BookIntake(models.Model):
     errors = models.JSONField(default=list, blank=True)
     progress = models.JSONField(default=dict, blank=True)
     confirmed_books = models.JSONField(default=list, blank=True)
+    has_manual_edits = models.BooleanField(default=False)
+    lease_expires_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

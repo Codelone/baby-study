@@ -74,6 +74,12 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Uploaded book photographs are served only by authenticated catalog views.
+MEDIA_ROOT = Path(os.environ.get("INTAKE_MEDIA_ROOT", BASE_DIR / "private-media"))
+INTAKE_MAX_PHOTOS = int(os.environ.get("INTAKE_MAX_PHOTOS", "30"))
+INTAKE_MAX_PHOTO_BYTES = int(os.environ.get("INTAKE_MAX_PHOTO_BYTES", str(8 * 1024 * 1024)))
+INTAKE_MEDIA_RETENTION_DAYS = int(os.environ.get("INTAKE_MEDIA_RETENTION_DAYS", "30"))
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
