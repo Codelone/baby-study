@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Prefetch, Q
@@ -9,6 +10,7 @@ from rest_framework.response import Response
 
 from catalog.models import Book, BookSeries, ShelfItem
 from catalog.serializers import (
+    BookCreateSerializer,
     BookDetailSerializer,
     BookSerializer,
     BookSeriesSerializer,
@@ -16,6 +18,7 @@ from catalog.serializers import (
     ShelfItemSerializer,
     ShelfUpdateSerializer,
 )
+from catalog.services import archive_book, can_manage_catalog, create_book, require_catalog_manager
 
 
 def book_queryset():
@@ -42,9 +45,12 @@ def ownership_context(request):
     }
 
 
-@api_view(["GET"])
+@api_view(["GET", "DELETE"])
 @permission_classes([IsAuthenticated])
 def book_detail(request, book_id):
+    if request.method == "DELETE":
+        archive_book(request.user, book_id)
+        return Response(status=204)
     book = get_object_or_404(book_queryset().prefetch_related("evidence"), pk=book_id)
     return Response(BookDetailSerializer(book, context=ownership_context(request)).data)
 
@@ -56,9 +62,36 @@ def series_detail(request, series_id):
     return Response(SeriesDetailSerializer(series, context=ownership_context(request)).data)
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def books(request):
+    if request.method == "POST":
+        require_catalog_manager(request.user)
+        serializer = BookCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        with transaction.atomic():
+            book, created = create_book(
+                request.user, data["fields"], idempotency_key=data["idempotency_key"]
+            )
+            if data["add_to_shelf"]:
+                get_user_model().objects.select_for_update().get(pk=request.user.pk)
+                item, _ = ShelfItem.objects.get_or_create(
+                    user=request.user,
+                    book=book,
+                    defaults={"ownership_status": "owned", "reading_status": "unread"},
+                )
+                if item.ownership_status != "owned":
+                    item.ownership_status = "owned"
+                    item.reading_status = "unread"
+                    item.save(update_fields=("ownership_status", "reading_status", "updated_at"))
+        return Response(
+            {
+                "book": BookDetailSerializer(book, context=ownership_context(request)).data,
+                "created": created,
+            },
+            status=201 if created else 200,
+        )
     queryset = book_queryset()
     query = request.query_params.get("q", "").strip()
     language = request.query_params.get("language", "").strip()
@@ -103,6 +136,20 @@ def books(request):
         {
             "books": BookSerializer(queryset, many=True, context=context).data,
             "series": BookSeriesSerializer(series, many=True, context=context).data,
+        }
+    )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def catalog_capabilities(request):
+    key_configured = bool(getattr(settings, "MIMO_API_KEY", ""))
+    return Response(
+        {
+            "can_manage_catalog": can_manage_catalog(request.user),
+            "realtime_configured": key_configured and bool(getattr(settings, "MIMO_BASE_URL", "")),
+            "batch_configured": key_configured
+            and bool(getattr(settings, "MIMO_BATCH_BASE_URL", "")),
         }
     )
 
