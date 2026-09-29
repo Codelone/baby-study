@@ -13,6 +13,12 @@ export type Evidence = {
   source_label: string
   status: 'confirmed' | 'candidate'
   collected_at: string
+  origin_kind?: 'web' | 'manual' | 'photo'
+  kind?: 'web' | 'manual' | 'photo'
+  label?: string
+  photo_id?: string | null
+  photo_url?: string
+  model_name?: string
 }
 export type Book = {
   id: number
@@ -35,6 +41,8 @@ export type Book = {
   cover_source_url: string
   description: string
   themes: string[]
+  catalog_status?: 'active' | 'legacy' | 'archived'
+  archived_at?: string | null
 }
 export type BookSeries = SeriesSummary & {
   description: string

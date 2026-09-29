@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { request } from './api'
+import { csrfToken, request, RequestError } from './api'
 import { coverage, languageLabels } from './catalog'
 import type { BookDetail, SeriesDetail } from './catalog'
 
@@ -67,25 +67,43 @@ export default function CatalogDetails({
   target,
   onClose,
   onBook,
+  canManage,
+  onArchived,
+  onAuthRequired,
 }: {
   target: { kind: 'book' | 'series'; id: number }
   onClose: () => void
   onBook: (id: number) => void
+  canManage: boolean
+  onArchived: () => Promise<void>
+  onAuthRequired: () => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const opener = useRef(document.activeElement as HTMLElement | null)
   const [data, setData] = useState<BookDetail | SeriesDetail | null>(null)
   const [error, setError] = useState('')
+  const [archiveConfirm, setArchiveConfirm] = useState(false)
+  const [archiving, setArchiving] = useState(false)
+  const archivePanel = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (archiveConfirm) archivePanel.current?.focus()
+  }, [archiveConfirm])
   useEffect(() => {
     dialog.current?.showModal()
     return () => {
-      opener.current?.focus()
+      if (opener.current?.isConnected) opener.current.focus()
+      else
+        (
+          document.getElementById('catalog-heading') ||
+          document.getElementById('shelf-heading')
+        )?.focus()
     }
   }, [])
   useEffect(() => {
     const abort = new AbortController()
     setData(null)
     setError('')
+    setArchiveConfirm(false)
     request<BookDetail | SeriesDetail>(
       (target.kind === 'book' ? '/books/' : '/series/') + target.id,
       { signal: abort.signal },
@@ -99,12 +117,41 @@ export default function CatalogDetails({
   const book = data && 'title' in data ? data : null
   const series = data && 'name' in data ? data : null
   const title = book?.title || series?.name || '图书详情'
+
+  async function archive() {
+    if (!book) return
+    setArchiving(true)
+    setError('')
+    try {
+      await request<void>('/books/' + book.id, {
+        method: 'DELETE',
+        headers: { 'X-CSRFToken': csrfToken() },
+      })
+      setData({ ...book, catalog_status: 'archived' })
+      setArchiveConfirm(false)
+      try {
+        await onArchived()
+        dialog.current?.close()
+      } catch {
+        setError('图书已归档，刷新书目暂时失败。请刷新页面查看，无需再次归档。')
+      }
+    } catch (cause) {
+      const failure = cause as RequestError
+      setError(failure.message || '归档失败，请稍后重试。')
+      if (failure.code === 'not_authenticated') onAuthRequired()
+    } finally {
+      setArchiving(false)
+    }
+  }
   return (
     <dialog
       className="catalog-dialog"
       ref={dialog}
       aria-labelledby="detail-title"
       onClose={onClose}
+      onCancel={(event) => {
+        if (archiving) event.preventDefault()
+      }}
       onKeyDown={(event) => {
         if (event.key !== 'Tab') return
         const controls = Array.from(
@@ -132,22 +179,29 @@ export default function CatalogDetails({
           onClick={() => dialog.current?.close()}
           autoFocus
           aria-label="关闭图书详情"
+          disabled={archiving}
         >
           关闭 ×
         </button>
       </div>
       <h2 id="detail-title">{title}</h2>
-      {error ? (
+      {error && (
         <p role="alert" className="error-banner">
           {error}
         </p>
-      ) : !data ? (
+      )}
+      {!data ? (
         <p role="status">正在读取详情…</p>
       ) : (
         <>
           <div className="detail-overview">
             <Cover url={data.cover_url} title={title} />
             <div>
+              {book?.catalog_status === 'archived' && (
+                <p className="status-tag archived-tag">
+                  已归档 · 原书架与阅读记录保留
+                </p>
+              )}
               <p>
                 {book
                   ? languageLabels[book.language]
@@ -263,20 +317,91 @@ export default function CatalogDetails({
                 <li key={index}>
                   <span>
                     {fieldLabels[source.field] || source.field} ·{' '}
-                    {source.status === 'confirmed' ? '已核实' : '候选'}
+                    {(source.kind || source.origin_kind) === 'manual' ||
+                    (source.kind || source.origin_kind) === 'photo'
+                      ? '人工确认'
+                      : source.status === 'confirmed'
+                        ? '已核实'
+                        : '候选'}
                   </span>
-                  <a href={source.source_url} target="_blank" rel="noreferrer">
-                    {source.source_label || '查看来源'} ↗
-                  </a>
+                  {/^https?:\/\//i.test(source.source_url) ? (
+                    <a
+                      href={source.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {source.label || source.source_label || '查看来源'} ↗
+                    </a>
+                  ) : source.photo_url?.startsWith('/baby/study/') ? (
+                    <a href={source.photo_url} target="_blank" rel="noreferrer">
+                      {source.label || source.source_label || '照片来源'} ↗
+                    </a>
+                  ) : (
+                    <span>
+                      {source.label ||
+                        source.source_label ||
+                        ((source.kind || source.origin_kind) === 'photo'
+                          ? '照片识别'
+                          : '人工录入')}
+                    </span>
+                  )}
                   <small>
-                    采集于{' '}
-                    {new Date(source.collected_at).toLocaleDateString('zh-CN')}
+                    {source.collected_at
+                      ? '记录于 ' +
+                        new Date(source.collected_at).toLocaleDateString(
+                          'zh-CN',
+                        )
+                      : '来源日期待核对'}
                   </small>
                 </li>
               ))}
             </ul>
           ) : (
             <p>当前记录来自历史清单，联网资料待核实。</p>
+          )}
+          {book && canManage && book.catalog_status !== 'archived' && (
+            <section className="archive-actions">
+              {!archiveConfirm ? (
+                <button
+                  className="remove-button"
+                  type="button"
+                  onClick={() => setArchiveConfirm(true)}
+                >
+                  归档此图书
+                </button>
+              ) : (
+                <div
+                  className="confirmation-panel"
+                  role="group"
+                  aria-label="确认归档图书"
+                  ref={archivePanel}
+                  tabIndex={-1}
+                >
+                  <h3>确认归档“{book.title}”？</h3>
+                  <p>
+                    归档后将从可选系统书目中隐藏。原有书架、阅读状态、系列关系和历史记录会保留，并显示归档标签。
+                  </p>
+                  <div className="management-actions">
+                    <button
+                      className="danger-button"
+                      type="button"
+                      disabled={archiving}
+                      onClick={() => void archive()}
+                    >
+                      {archiving ? '正在归档…' : '确认归档'}
+                    </button>
+                    <button
+                      className="secondary-button"
+                      type="button"
+                      disabled={archiving}
+                      onClick={() => setArchiveConfirm(false)}
+                    >
+                      返回详情
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
           )}
         </>
       )}

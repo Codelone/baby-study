@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import AssessmentArea from './Assessment'
+import CatalogManagement from './CatalogManagement'
 import CatalogDetails, { Cover } from './CatalogDetails'
 import { coverage, languageLabels } from './catalog'
 import type { Book, BookSeries, Language } from './catalog'
 import { jsonRequest, request, RequestError } from './api'
+import type { CatalogCapabilities } from './intake'
 
 type ReadingStatus = 'unread' | 'reading' | 'familiar' | 'paused'
 type Section = 'shelf' | 'catalog' | 'assessment'
@@ -46,6 +48,9 @@ function BookDetails({
         <Cover url={book.cover_url} title={book.title} />
         <div>
           <h3>{book.title}</h3>
+          {book.catalog_status === 'archived' && (
+            <p className="status-tag archived-tag">已归档 · 保留书架记录</p>
+          )}
           <p className="book-meta">
             {book.authors.join('、') || book.publisher || '书目资料待补全'}
           </p>
@@ -120,7 +125,16 @@ export default function App() {
   } | null>(null)
   const showBook = (book: Book) =>
     setDetailTarget({ kind: 'book', id: book.id })
-  const [section, setSection] = useState<Section>('shelf')
+  const [section, setSection] = useState<Section>(
+    window.location.hash.startsWith('#catalog') ? 'catalog' : 'shelf',
+  )
+  const [capabilities, setCapabilities] = useState<CatalogCapabilities | null>(
+    null,
+  )
+  const [showManagement, setShowManagement] = useState(
+    window.location.hash.startsWith('#catalog/'),
+  )
+  const [managementDirty, setManagementDirty] = useState(false)
   const [books, setBooks] = useState<Book[]>([])
   const [series, setSeries] = useState<BookSeries[]>([])
   const [shelf, setShelf] = useState<ShelfItem[]>([])
@@ -135,6 +149,55 @@ export default function App() {
     {},
   )
   const disabled = loading || busyAction !== null
+
+  const requireAuth = useCallback(() => setAuthRequired(true), [])
+
+  useEffect(() => {
+    const abort = new AbortController()
+    request<CatalogCapabilities>('/catalog-capabilities', {
+      signal: abort.signal,
+    })
+      .then(setCapabilities)
+      .catch((cause: RequestError) => {
+        if (abort.signal.aborted) return
+        if (cause.code === 'not_authenticated') setAuthRequired(true)
+        else setError('读取图书管理权限失败：' + cause.message)
+      })
+    return () => abort.abort()
+  }, [])
+
+  function navigateSection(next: Section) {
+    if (
+      next !== section &&
+      managementDirty &&
+      !window.confirm(
+        '有未保存的图书资料或待上传照片。离开会放弃这些内容，确认离开？',
+      )
+    )
+      return
+    setSection(next)
+    if (next !== 'catalog') {
+      window.history.replaceState(null, '', '#' + next)
+    }
+  }
+
+  function toggleManagement() {
+    if (
+      showManagement &&
+      managementDirty &&
+      !window.confirm(
+        '有未保存的图书资料或待上传照片。关闭会放弃这些内容，确认关闭？',
+      )
+    )
+      return
+    setShowManagement(!showManagement)
+    setSection('catalog')
+    window.history.replaceState(
+      null,
+      '',
+      showManagement ? '#catalog' : '#catalog/manage',
+    )
+  }
 
   useEffect(() => {
     let active = true
@@ -161,13 +224,13 @@ export default function App() {
     }
   }, [query, language])
 
-  async function refreshLibrary() {
+  const refreshLibrary = useCallback(async () => {
     const [bookData, shelfData] = await loadLibrary(query, language)
     setBooks(bookData.books)
     setSeries(bookData.series)
     setShelf(shelfData.items)
     setAuthRequired(false)
-  }
+  }, [query, language])
 
   function showFailure(cause: unknown) {
     const failure = cause as RequestError
@@ -299,9 +362,19 @@ export default function App() {
             整理家中读物，记录孩子的真实表现，找到适合的共读起点。
           </p>
         </div>
-        <a className="admin-link" href="/admin/catalog/book/">
-          管理图书清单 <span aria-hidden="true">↗</span>
-        </a>
+        {capabilities?.can_manage_catalog && (
+          <button
+            className="text-button admin-link"
+            type="button"
+            onClick={() => {
+              setSection('catalog')
+              setShowManagement(true)
+              window.history.replaceState(null, '', '#catalog/manage')
+            }}
+          >
+            新增图书 →
+          </button>
+        )}
       </header>
 
       {authRequired ? (
@@ -318,21 +391,21 @@ export default function App() {
             <button
               className={section === 'shelf' ? 'tab active' : 'tab'}
               type="button"
-              onClick={() => setSection('shelf')}
+              onClick={() => navigateSection('shelf')}
             >
               我的书架 <span>{shelf.length}</span>
             </button>
             <button
               className={section === 'catalog' ? 'tab active' : 'tab'}
               type="button"
-              onClick={() => setSection('catalog')}
+              onClick={() => navigateSection('catalog')}
             >
               系统书目 <span>{books.length} 本</span>
             </button>
             <button
               className={section === 'assessment' ? 'tab active' : 'tab'}
               type="button"
-              onClick={() => setSection('assessment')}
+              onClick={() => navigateSection('assessment')}
             >
               初始评估
             </button>
@@ -353,14 +426,16 @@ export default function App() {
             <AssessmentArea
               shelfCount={shelf.length}
               onGoShelf={() => setSection('shelf')}
-              onAuthRequired={() => setAuthRequired(true)}
+              onAuthRequired={requireAuth}
             />
           ) : section === 'shelf' ? (
             <section aria-labelledby="shelf-heading">
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">HOME SHELF</p>
-                  <h2 id="shelf-heading">我的书架</h2>
+                  <h2 id="shelf-heading" tabIndex={-1}>
+                    我的书架
+                  </h2>
                 </div>
                 <button
                   className="text-button"
@@ -430,10 +505,32 @@ export default function App() {
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">BOOK CATALOG</p>
-                  <h2 id="catalog-heading">系统书目</h2>
+                  <h2 id="catalog-heading" tabIndex={-1}>
+                    系统书目
+                  </h2>
                 </div>
                 <p>按单本记录，也可以批量加入系列已收录的分册。</p>
               </div>
+              {capabilities?.can_manage_catalog && (
+                <>
+                  <button
+                    className="secondary-button management-toggle"
+                    type="button"
+                    aria-expanded={showManagement}
+                    onClick={toggleManagement}
+                  >
+                    {showManagement ? '收起图书录入' : '新增图书 / 照片录入'}
+                  </button>
+                  {showManagement && (
+                    <CatalogManagement
+                      capabilities={capabilities}
+                      onLibraryChanged={refreshLibrary}
+                      onAuthRequired={requireAuth}
+                      onUnsavedChange={setManagementDirty}
+                    />
+                  )}
+                </>
+              )}
               <div className="filters">
                 <label>
                   <span>查找书名或系列</span>
@@ -631,6 +728,9 @@ export default function App() {
           target={detailTarget}
           onClose={() => setDetailTarget(null)}
           onBook={(id) => setDetailTarget({ kind: 'book', id })}
+          canManage={capabilities?.can_manage_catalog ?? false}
+          onArchived={refreshLibrary}
+          onAuthRequired={requireAuth}
         />
       )}
     </main>

@@ -97,6 +97,7 @@ h3 {
   margin: 30px 0 36px;
 }
 .tab {
+  min-height: 44px;
   border: 1px solid transparent;
   border-radius: 100px;
   padding: 10px 18px;
@@ -158,10 +159,370 @@ select {
 }
 input:focus,
 select:focus,
+textarea:focus,
 button:focus-visible,
 a:focus-visible {
   outline: 3px solid #9fc7aa;
   outline-offset: 2px;
+}
+
+.secondary-button,
+.danger-button {
+  min-height: 44px;
+  border: 1px solid #b7c8b5;
+  border-radius: 9px;
+  padding: 9px 14px;
+  background: #fffdf7;
+  color: #34674e;
+  font-weight: 700;
+}
+.danger-button {
+  border-color: #9b554a;
+  background: #9b554a;
+  color: #fff;
+}
+.primary-button,
+.text-button,
+.remove-button {
+  min-height: 44px;
+}
+.management-toggle {
+  margin-bottom: 20px;
+}
+.catalog-management {
+  margin: 0 0 28px;
+  padding: 24px;
+  border: 1px solid #cedbc9;
+  border-radius: 16px;
+  background: #fffdf7;
+}
+.management-tabs,
+.management-actions,
+.intake-group-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.management-tabs {
+  margin: 12px 0 24px;
+}
+.management-actions {
+  margin: 18px 0;
+}
+.management-actions p {
+  margin: 0;
+}
+.book-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.book-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  color: #576d5f;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.book-field input,
+.book-field select,
+.book-field textarea {
+  width: 100%;
+  min-width: 0;
+}
+.book-field textarea {
+  resize: vertical;
+  min-height: 64px;
+  padding: 10px 12px;
+  border: 1px solid #cdd6cb;
+  border-radius: 10px;
+  background: #fff;
+  color: #273a35;
+  line-height: 1.5;
+}
+.field-description {
+  grid-column: 1 / -1;
+}
+.extra-fields {
+  margin: 16px 0;
+  border-top: 1px solid #e3e5dc;
+  padding-top: 8px;
+}
+.extra-fields > summary {
+  min-height: 44px;
+  padding: 12px 0;
+  cursor: pointer;
+  color: #34674e;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+summary:focus-visible {
+  outline: 3px solid #9fc7aa;
+  outline-offset: 2px;
+}
+.status-tag {
+  display: inline-block;
+  margin-bottom: 8px;
+  border-radius: 100px;
+  padding: 5px 10px;
+  background: #edf3ed;
+  color: #46755b;
+  font-size: 0.78rem;
+}
+.archived-tag {
+  background: #f1ece1;
+  color: #75654b;
+}
+.photo-upload-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.file-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 1px dashed #a9bba3;
+  border-radius: 12px;
+  background: #fafdf7;
+  color: #34674e;
+  font-weight: 700;
+}
+.file-picker input {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  padding: 8px;
+  font-size: 0.85rem;
+}
+.config-notice,
+.conflict-panel,
+.confirmation-panel {
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid #dfceae;
+  border-radius: 12px;
+  background: #fbf5e7;
+  color: #725a38;
+  line-height: 1.6;
+}
+.confirmation-panel h4,
+.candidate-card h4 {
+  margin: 0 0 12px;
+}
+.intake-task-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.intake-task {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid #d9e2d4;
+  border-radius: 12px;
+  background: #fff;
+  color: #34674e;
+  text-align: left;
+}
+.intake-task span {
+  color: #667771;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.intake-task.active {
+  border-color: #6d9978;
+  background: #edf3ed;
+}
+.intake-review {
+  border-top: 1px solid #d9e2d4;
+  padding-top: 24px;
+}
+.intake-review progress {
+  width: 100%;
+  height: 10px;
+  margin-bottom: 16px;
+  accent-color: #315d46;
+}
+.intake-group-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.intake-group-heading h3,
+.intake-group-heading p {
+  margin-bottom: 0;
+}
+.intake-group-heading > p {
+  flex: 1;
+}
+.intake-groups {
+  display: grid;
+  gap: 20px;
+}
+.intake-group {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #d9e2d4;
+  border-radius: 14px;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+.intake-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+  padding: 0;
+  list-style: none;
+}
+.intake-photo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #e3e5dc;
+  border-radius: 10px;
+  background: #fafbf8;
+  color: #576d5f;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.intake-photo img {
+  display: block;
+  width: 100%;
+  height: 135px;
+  object-fit: contain;
+  border-radius: 5px;
+  background: #f1efe7;
+}
+.photo-unavailable {
+  display: grid;
+  place-content: center;
+  height: 135px;
+  margin: 0;
+  padding: 12px;
+  background: #f1efe7;
+}
+.photo-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #34674e;
+  font-size: 0.85rem;
+}
+.photo-select input,
+.inline-choice input,
+.choice input {
+  min-height: auto;
+  width: 18px;
+  height: 18px;
+  accent-color: #315d46;
+}
+.intake-group-tools > label {
+  flex: 1 1 180px;
+}
+.intake-issues {
+  margin: 16px 0;
+  padding: 12px 18px 12px 32px;
+  border-radius: 10px;
+  background: #fbf5e7;
+  color: #725a38;
+  line-height: 1.6;
+}
+.intake-action-panel,
+.unassigned-photos,
+.enrichment-results,
+.archive-actions {
+  margin-top: 24px;
+  border-top: 1px solid #d9e2d4;
+  padding-top: 20px;
+}
+.candidate-card {
+  padding: 18px;
+  margin-top: 14px;
+  border: 1px solid #cddbc8;
+  border-radius: 12px;
+  background: #fafdf7;
+}
+.candidate-card p {
+  color: #667771;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.candidate-fields {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 0;
+  margin: 18px 0;
+  border: 0;
+}
+.candidate-fields legend {
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.intake-review h3[tabindex]:focus {
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .catalog-management {
+    padding: 18px 14px;
+  }
+  .book-fields,
+  .photo-upload-controls,
+  .intake-task-list {
+    grid-template-columns: 1fr;
+  }
+  .intake-group {
+    padding: 16px 12px;
+  }
+  .intake-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .intake-photo select {
+    padding: 0 6px;
+    font-size: 0.8rem;
+  }
+  .management-tabs {
+    gap: 4px;
+  }
+  .management-tabs .tab {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  .intake-group-tools,
+  .management-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .intake-group-tools > label {
+    flex-basis: auto;
+  }
+  .book-field input,
+  .book-field textarea,
+  .book-field select {
+    font-size: 16px;
+  }
 }
 .book-grid {
   display: grid;

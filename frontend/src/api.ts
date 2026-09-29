@@ -44,7 +44,12 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
   })
   if (response.status === 204) return undefined as T
-  const body = (await response.json()) as T & ApiError
+  let body: T & ApiError
+  try {
+    body = (await response.json()) as T & ApiError
+  } catch {
+    throw new RequestError('服务暂时不可用，请稍后重试。', 'invalid_response')
+  }
   if (!response.ok) {
     throw new RequestError(
       detailMessage(body.error?.details) || body.error?.message || '请求失败',
