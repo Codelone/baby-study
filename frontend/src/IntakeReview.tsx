@@ -36,6 +36,58 @@ const photoLabels: Record<string, string> = {
   other: '其他照片',
 }
 
+function UsageSummary({ photos }: { photos: IntakePhoto[] }) {
+  const metrics = [
+    ['prompt_tokens', '输入 tokens'],
+    ['completion_tokens', '输出 tokens'],
+    ['total_tokens', '合计 tokens'],
+  ] as const
+  const models = [
+    ...new Set(
+      photos.map((photo) => photo.extraction?.model_name).filter(Boolean),
+    ),
+  ]
+  return (
+    <section aria-label="供应商已返回用量">
+      <h4>供应商已返回用量（tokens）</h4>
+      <dl className="metadata-grid">
+        {metrics.map(([key, label]) => {
+          const returned = photos.flatMap((photo) => {
+            const value = photo.extraction?.usage?.[key]
+            return typeof value === 'number' &&
+              Number.isFinite(value) &&
+              value >= 0
+              ? [value]
+              : []
+          })
+          return (
+            <div key={key}>
+              <dt>{label}</dt>
+              <dd>
+                {returned.length
+                  ? returned
+                      .reduce((total, value) => total + value, 0)
+                      .toLocaleString('zh-CN')
+                  : '暂无返回'}
+              </dd>
+              <small>
+                已返回 {returned.length}/{photos.length} 张照片
+              </small>
+            </div>
+          )
+        })}
+      </dl>
+      {models.length > 0 && (
+        <p className="book-meta">返回的模型：{models.join('、')}</p>
+      )}
+      <p className="question-hint">
+        仅汇总照片结果中已返回的用量，暂无数据不代表零消耗。失败项、未完成项及重试等调用的已消耗用量可能未包含在内；费用以
+        MiMo 账单为准。
+      </p>
+    </section>
+  )
+}
+
 function EvidenceList({
   evidence,
   photos = [],
@@ -754,6 +806,7 @@ export default function IntakeReview({
           </p>
         </>
       )}
+      <UsageSummary photos={intake.photos} />
       {error && (
         <p className="error-banner" role="alert">
           {error}

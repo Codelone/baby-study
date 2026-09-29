@@ -118,6 +118,12 @@ export type IntakePhoto = {
     photo_type?: string
     fields?: Partial<BookFields>
     issues?: IntakeIssue[]
+    model_name?: string
+    usage?: {
+      prompt_tokens?: number | null
+      completion_tokens?: number | null
+      total_tokens?: number | null
+    } | null
   }
 }
 export type IntakeStatus =
