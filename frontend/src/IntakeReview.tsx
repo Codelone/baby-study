@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import BookFieldsEditor from './BookFieldsEditor'
+import SeriesSelector from './SeriesSelector'
+import type { BookSeries } from './catalog'
 import { jsonRequest, request, RequestError } from './api'
 import { languageLabels } from './catalog'
 import {
@@ -354,6 +356,9 @@ function GroupCard({
   intake,
   disabled,
   candidateResult,
+  seriesOptions,
+  onSeriesCreated,
+  onAuthRequired,
   onChange,
   onMove,
   onSplit,
@@ -365,6 +370,9 @@ function GroupCard({
   intake: Intake
   disabled: boolean
   candidateResult?: CandidateResult
+  seriesOptions: BookSeries[]
+  onSeriesCreated: (series: BookSeries) => void
+  onAuthRequired: () => void
   onChange: (group: IntakeGroup) => void
   onMove: (photoId: string, groupId: string) => void
   onSplit: (groupId: string, photos: string[]) => void
@@ -409,6 +417,17 @@ function GroupCard({
           选中入库
         </label>
       </div>
+      <SeriesSelector
+        value={
+          group.series_ids ??
+          (intake.target_series ? [intake.target_series.id] : [])
+        }
+        options={seriesOptions}
+        disabled={disabled}
+        onChange={(ids) => onChange({ ...group, series_ids: ids })}
+        onCreated={onSeriesCreated}
+        onAuthRequired={onAuthRequired}
+      />
       {group.existing_book_id !== null && (
         <p className="shared-note">
           已有书目候选 #{group.existing_book_id}
@@ -575,18 +594,35 @@ function GroupCard({
 
 export default function IntakeReview({
   initial,
+  onSeries,
   onIntake,
   onConfirmed,
   onAuthRequired,
   onDirty,
 }: {
   initial: Intake
+  onSeries?: (id: number) => void
   onIntake: (intake: Intake) => void
   onConfirmed: () => Promise<void>
   onAuthRequired: () => void
   onDirty: (dirty: boolean) => void
 }) {
   const [intake, setIntake] = useState(initial)
+  const [seriesOptions, setSeriesOptions] = useState<BookSeries[]>([])
+  useEffect(() => {
+    const abort = new AbortController()
+    request<{ series: BookSeries[] }>('/series', { signal: abort.signal })
+      .then((r) => {
+        if (!abort.signal.aborted) setSeriesOptions(r.series)
+      })
+      .catch((cause: RequestError) => {
+        if (!abort.signal.aborted) {
+          setError('读取系列失败：' + cause.message)
+          if (cause.code === 'not_authenticated') onAuthRequired()
+        }
+      })
+    return () => abort.abort()
+  }, [onAuthRequired])
   const [dirty, setDirty] = useState(false)
   const [conflict, setConflict] = useState<Intake | null>(null)
   const [busy, setBusy] = useState('')
@@ -718,9 +754,13 @@ export default function IntakeReview({
     setConfirmation('')
     setNotice('')
   }
-  function newGroup(photos: string[]): IntakeGroup {
+  function newGroup(
+    photos: string[],
+    seriesIds = intake.target_series ? [intake.target_series.id] : [],
+  ): IntakeGroup {
     return {
       id: 'manual-' + crypto.randomUUID(),
+      series_ids: seriesIds,
       photo_ids: photos,
       fields: emptyFields(),
       evidence: [],
@@ -734,7 +774,13 @@ export default function IntakeReview({
       ...group,
       photo_ids: group.photo_ids.filter((id) => id !== photoId),
     }))
-    if (target === 'new') next.push(newGroup([photoId]))
+    if (target === 'new')
+      next.push(
+        newGroup(
+          [photoId],
+          intake.groups.find((g) => g.photo_ids.includes(photoId))?.series_ids,
+        ),
+      )
     else if (target) {
       const destination = next.find((group) => group.id === target)
       destination?.photo_ids.push(photoId)
@@ -757,7 +803,7 @@ export default function IntakeReview({
             }
           : group,
       ),
-      newGroup(photos),
+      newGroup(photos, intake.groups.find((g) => g.id === groupId)?.series_ids),
     ])
     setCandidates({})
   }
@@ -772,11 +818,17 @@ export default function IntakeReview({
             ? {
                 ...group,
                 photo_ids: [...group.photo_ids, ...source.photo_ids],
+                series_ids: [
+                  ...new Set([
+                    ...(group.series_ids ?? []),
+                    ...(source.series_ids ?? []),
+                  ]),
+                ],
                 evidence: [...group.evidence, ...source.evidence],
                 issues: [
                   ...group.issues,
                   ...source.issues,
-                  '已合并照片并保留目标组资料，请核对是否同一本、同一版本。',
+                  '已合并照片并保留目标组资料及系列归属，请核对是否同一本、同一版本以及所属系列。',
                 ],
                 existing_book_id: null,
               }
@@ -845,6 +897,22 @@ export default function IntakeReview({
             完成时间取决于调度；离开或刷新后可从任务列表继续。
           </p>
         </>
+      )}
+      {intake.target_series && (
+        <p className="series-target">
+          来源系列：<strong>{intake.target_series.name}</strong> ·
+          以每本核对的归属为准。
+          {onSeries && (
+            <button
+              type="button"
+              className="text-button"
+              disabled={!!busy}
+              onClick={() => onSeries(intake.target_series!.id)}
+            >
+              返回来源系列维护 →
+            </button>
+          )}
+        </p>
       )}
       <UsageSummary intake={intake} />
       {error && (
@@ -916,6 +984,14 @@ export default function IntakeReview({
         {intake.groups.map((group, index) => (
           <GroupCard
             group={group}
+            seriesOptions={seriesOptions}
+            onSeriesCreated={(s) => {
+              setSeriesOptions((old) => [...old, s])
+              void onConfirmed().catch(() =>
+                setNotice('系列已创建，书目刷新失败，请刷新页面查看。'),
+              )
+            }}
+            onAuthRequired={onAuthRequired}
             index={index}
             intake={intake}
             disabled={disabled}
@@ -1085,7 +1161,14 @@ export default function IntakeReview({
                   <li key={group.id}>
                     {group.fields.title || '书名未填写'} · ISBN{' '}
                     {group.fields.isbn || '未知'} ·{' '}
-                    {group.fields.edition || '版本未填写'}
+                    {group.fields.edition || '版本未填写'} · 系列：
+                    {(group.series_ids ?? [])
+                      .map(
+                        (id) =>
+                          seriesOptions.find((s) => s.id === id)?.name ??
+                          `系列 #${id}`,
+                      )
+                      .join('、') || '无'}
                   </li>
                 ))}
               </ul>

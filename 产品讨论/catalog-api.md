@@ -59,3 +59,24 @@
 所有照片默认 Batch，可显式选 realtime；worker 独立处理，页面关闭不影响持久化任务。仅重提失败照片，不重付成功项；提交不确定且未知供应商 ID 时阻止盲目重提，已知 ID 则只查询协调。供应商迟到结果不会自动入库。联网补全仅候选，字段应用和统一入库分别要求用户明确操作。
 
 每批30张、单张8MiB、JPEG/PNG/WebP，服务端检查内容并清除EXIF。照片默认30天保留，`cleanup_intake_media` 保留文本及证据。三类实时能力和真实页面已联调；真实 Batch 下载仍等待供应商结果，不能把离线协议测试当作完整真实验收。
+
+
+## 006：前台系列维护（2026-09-29）
+
+以下写接口仅管理员可用，沿用会话认证/CSRF与错误格式。详见 [006规格](../specs/006-series-management/spec.md)。
+
+| 接口 | 请求 / 返回 |
+| --- | --- |
+| GET /series?q=… | 名称、别名、品牌或套装ISBN搜索，含空系列；返回 {series: BookSeries[]} |
+| POST /series | 系列资料对象，仅name必填；可选book_ids创建时关联当前活动书，同一事务；返回系列，201 |
+| PATCH /series/{id} | 系列资料部分更新；返回SeriesDetail |
+| GET /series/{id}/members | 管理员返回 {members: [{book: Book, position}]}，含活动/归档/历史成员 |
+| POST /series/{id}/members | {book_ids: number[]}，批量追加活动书；重复关联安全；返回系列 |
+| DELETE /series/{id}/members/{book_id} | 只解除本系列关系，清除匹配的旧主系列引用；重复移出204 |
+| PUT /series/{id}/members/order | {book_ids: number[]}完整当前成员顺序；集合不一致409 series_members_conflict；返回系列 |
+
+系列字段支持name/description/family/aliases/isbn/edition/publisher/publication_date/cover_url/cover_source_url/contents/expected_count/completeness。名称按NFKC、大小写及空白规范化检查重复；不自动合并版本。ISBN按单本/套装分开校验。总册数null表示未知；complete需总册数与活动成员数一致并人工确认，成员集合变化降级partial，超过总册数允许关联并在UI显示数量冲突。修改字段和成员关系记人工来源/操作者及manual_fields，后续采集保留。
+
+POST /books增加可选series_ids数组。其与字段、来源、已有版本选择一起进入幂等请求记录；创建/复用和关联同一事务，不修改已有书字段或其他关系。省略时兼容旧调用。
+
+POST /book-intakes（multipart）可选target_series_id；任务响应增加target_series（id/name或null）；草稿组增加series_ids数组。Worker默认带入来源，人工选择和显式空数组优先；老Worker未写组归属时，确认服务使用已保存来源。合并取归属并集，拆分或从组移出建立新组继承归属。PATCH groups沿用revision保护，确认一并保存图书/关联/可选书架，失败全回滚；确认后不能修改。新确认记录保存add_to_shelf选项，改变选项的重复确认409；旧确认记录保持兼容。

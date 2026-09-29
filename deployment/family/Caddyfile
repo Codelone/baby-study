@@ -1,0 +1,39 @@
+{
+  admin off
+  auto_https off
+}
+
+http://:8080 {
+  bind 127.0.0.1
+
+  @trial host {$FAMILY_TRIAL_HOST}
+  handle @trial {
+    encode gzip
+
+    @backend path /baby/study /baby/study/* /admin /admin/*
+    handle @backend {
+      reverse_proxy 127.0.0.1:8000 {
+        header_up X-Forwarded-Proto https
+        header_up -X-Forwarded-Host
+      }
+    }
+
+    handle_path /static/* {
+      root * {$FAMILY_TRIAL_ROOT}/backend/staticfiles
+      file_server
+    }
+
+    @hidden path_regexp hidden (^|/)\.
+    handle @hidden {
+      respond 404
+    }
+
+    handle {
+      root * {$FAMILY_TRIAL_ROOT}/frontend/dist
+      try_files {path} /index.html
+      file_server
+    }
+  }
+
+  respond "Unknown trial hostname" 404
+}

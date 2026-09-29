@@ -20,7 +20,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from catalog.intake.costs import estimate_cost
-from catalog.models import BookIntake, IntakePhoto, ShelfItem
+from catalog.models import BookIntake, BookSeries, IntakePhoto, ShelfItem
+from catalog.series_services import validate_series_ids
 
 
 class RevisionConflict(APIException):
@@ -42,9 +43,9 @@ def require_admin(request):
 
 def owned_intake(request, intake_id, *, lock=False):
     require_admin(request)
-    queryset = BookIntake.objects.filter(user=request.user)
+    queryset = BookIntake.objects.select_related("target_series").filter(user=request.user)
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     return get_object_or_404(queryset, pk=intake_id)
 
 
@@ -76,6 +77,9 @@ def serialize_intake(intake):
         "revision": intake.revision,
         "generation": intake.generation,
         "groups": intake.groups,
+        "target_series": {"id": intake.target_series_id, "name": intake.target_series.name}
+        if intake.target_series_id
+        else None,
         "unassigned_photo_ids": intake.unassigned_photo_ids,
         "errors": intake.errors,
         "progress": intake.progress,
@@ -114,8 +118,18 @@ def normalized_photo(upload):
 def book_intakes(request):
     require_admin(request)
     if request.method == "GET":
-        intakes = BookIntake.objects.filter(user=request.user).prefetch_related("photos")[:100]
+        intakes = (
+            BookIntake.objects.select_related("target_series")
+            .filter(user=request.user)
+            .prefetch_related("photos")[:100]
+        )
         return Response({"intakes": [serialize_intake(intake) for intake in intakes]})
+    target_id = request.data.get("target_series_id")
+    target = None
+    if target_id not in (None, ""):
+        if isinstance(target_id, bool) or not re.fullmatch(r"[1-9][0-9]*", str(target_id)):
+            raise serializers.ValidationError({"target_series_id": "请选择有效系列"})
+        target = get_object_or_404(BookSeries, pk=int(target_id))
     mode = request.data.get("mode", "batch")
     if mode not in {"batch", "realtime"}:
         raise serializers.ValidationError({"mode": "请选择省钱批量或实时模式"})
@@ -138,6 +152,7 @@ def book_intakes(request):
         with transaction.atomic():
             intake = BookIntake.objects.create(
                 user=request.user,
+                target_series=target,
                 mode=mode,
                 progress={"total": len(prepared), "completed": 0, "failed": 0},
             )
@@ -299,6 +314,15 @@ def normalized_groups(intake, data):
                 "issues": old.get("issues", []),
                 "existing_book_id": existing_id,
                 "selected": bool(group.get("selected", True)),
+                "series_ids": validate_series_ids(
+                    group.get(
+                        "series_ids",
+                        old.get(
+                            "series_ids",
+                            [intake.target_series_id] if intake.target_series_id else [],
+                        ),
+                    )
+                ),
                 "enrichment_candidates": candidates,
                 "existing_book_candidates": old.get("existing_book_candidates", []),
             }
@@ -378,7 +402,10 @@ def intake_confirm(request, intake_id):
     with transaction.atomic():
         intake = owned_intake(request, intake_id, lock=True)
         if intake.status == "confirmed":
-            if set(ids) != {row["group_id"] for row in intake.confirmed_books}:
+            if set(ids) != {row["group_id"] for row in intake.confirmed_books} or (
+                intake.confirmation_options
+                and add_to_shelf != intake.confirmation_options["add_to_shelf"]
+            ):
                 raise IntakeStateConflict("任务已确认，不能更换入库内容")
             return Response({"intake": serialize_intake(intake), "books": intake.confirmed_books})
         check_revision(intake, request.data)
@@ -415,6 +442,9 @@ def intake_confirm(request, intake_id):
                     for claim in group.get("evidence", [])
                 ],
                 existing_book_id=group.get("existing_book_id"),
+                series_ids=group.get(
+                    "series_ids", [intake.target_series_id] if intake.target_series_id else None
+                ),
             )
             if add_to_shelf:
                 item, _ = ShelfItem.objects.get_or_create(
@@ -428,8 +458,18 @@ def intake_confirm(request, intake_id):
                 if item.ownership_status != "owned":
                     item.ownership_status, item.reading_status = "owned", "unread"
                     item.save()
-            result.append({"group_id": group_id, "book_id": book.id, "created": created})
+            result.append(
+                {
+                    "group_id": group_id,
+                    "book_id": book.id,
+                    "created": created,
+                    "series_ids": group.get(
+                        "series_ids", [intake.target_series_id] if intake.target_series_id else []
+                    ),
+                }
+            )
         intake.confirmed_books, intake.status = result, "confirmed"
+        intake.confirmation_options = {"add_to_shelf": add_to_shelf}
         intake.revision += 1
         intake.save()
     return Response({"intake": serialize_intake(intake), "books": result})

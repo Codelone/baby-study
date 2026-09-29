@@ -57,6 +57,7 @@ specs/
 | 002 | 系列分组与批量加入书架 | implemented | v0.1 | [spec](002-series-shelf/spec.md) | [plan](002-series-shelf/plan.md) |
 | 003 | 图书资料重设计与全表联网补全 | implemented | v0.1 | [spec](003-catalog-enrichment/spec.md) | [plan](003-catalog-enrichment/plan.md) |
 | 004 | 系统图书管理、拍照录入与 MiMo 模型接入 | in-progress | v0.5 | [spec](004-catalog-management-ai/spec.md) | [plan](004-catalog-management-ai/plan.md) |
+| 006 | 系列图书维护 | implemented | v0.1 | [spec](006-series-management/spec.md) | [plan](006-series-management/plan.md) |
 
 2026-09-29：003 已追加后续新增图书联网能力的澄清。当前新增图书不自动联网；系统内检索候选并确认版本的入口为 Agent 建议，尚未确认或实施，v0.1 范围和状态不变。
 
@@ -71,3 +72,5 @@ specs/
 2026-09-29 开发启动：004 v0.5/in-progress。用户已提交代码基线并提供密钥文件，授权多个会话并发开发，当前主会话负责问题确认与集成。公共契约已建立，业务验收尚未完成。
 
 2026-09-29 集成：004 六个任务代码已集成，257 个后端测试和前端检查通过，真实三模态、前台录入/归档、可选联网补全已联调。页面区分已返回 tokens、国内价目估算和实际账单，标明覆盖项/日期/假设。真实 Batch 仍等待供应商结果，真机相机/实物照片尚未验证；保持 v0.5/in-progress，详见 [验收记录](004-catalog-management-ai/validation.md)。
+
+2026-09-29：006 v0.1/implemented。系列资料、成员关联/移出/排序及手工/照片系列归属已实现。283 项后端测试和全部前端检查通过，桌面及手机模拟视口验证通过；现有试用地址保持不变。未新增真实供应商识别或物理手机相机验证，004/005 对应的待验收事项继续保留。详见 [验收记录](006-series-management/validation.md)。

@@ -215,6 +215,9 @@ class SourceEvidence(models.Model):
 class BookIntake(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    target_series = models.ForeignKey(
+        BookSeries, null=True, blank=True, on_delete=models.PROTECT, related_name="intakes"
+    )
     mode = models.CharField(
         max_length=16, choices=(("batch", "省钱批量"), ("realtime", "实时")), default="batch"
     )
@@ -226,6 +229,7 @@ class BookIntake(models.Model):
     errors = models.JSONField(default=list, blank=True)
     progress = models.JSONField(default=dict, blank=True)
     confirmed_books = models.JSONField(default=list, blank=True)
+    confirmation_options = models.JSONField(default=dict, blank=True)
     has_manual_edits = models.BooleanField(default=False)
     lease_expires_at = models.DateTimeField(null=True, blank=True)
     lease_token = models.UUIDField(null=True, blank=True)

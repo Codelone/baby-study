@@ -1,6 +1,6 @@
 from django.urls import path
 
-from catalog import intake_api
+from catalog import intake_api, series_api
 from catalog.views import (
     book_detail,
     books,
@@ -31,6 +31,18 @@ urlpatterns = [
     ),
     path("books", books, name="books"),
     path("books/<int:book_id>", book_detail, name="book-detail"),
+    path("series", series_api.series_collection, name="series"),
+    path("series/<int:series_id>/members", series_api.series_members, name="series-members"),
+    path(
+        "series/<int:series_id>/members/order",
+        series_api.series_member_order,
+        name="series-member-order",
+    ),
+    path(
+        "series/<int:series_id>/members/<int:book_id>",
+        series_api.series_member,
+        name="series-member",
+    ),
     path("series/<int:series_id>", series_detail, name="series-detail"),
     path("shelf", shelf, name="shelf"),
     path("shelf/<int:book_id>", shelf_book, name="shelf-book"),

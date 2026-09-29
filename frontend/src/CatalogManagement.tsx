@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { csrfToken, jsonRequest, request, RequestError } from './api'
 import BookFieldsEditor from './BookFieldsEditor'
 import IntakeReview from './IntakeReview'
+import SeriesSelector from './SeriesSelector'
 import {
   cleanFields,
   emptyFields,
@@ -27,11 +28,15 @@ function FilePreview({ file }: { file: File }) {
 
 export default function CatalogManagement({
   capabilities,
+  targetSeries,
+  onManageSeries,
   onLibraryChanged,
   onAuthRequired,
   onUnsavedChange,
 }: {
   capabilities: CatalogCapabilities
+  targetSeries?: { id: number; name: string }
+  onManageSeries?: (id: number) => void
   onLibraryChanged: () => Promise<void>
   onAuthRequired: () => void
   onUnsavedChange: (dirty: boolean) => void
@@ -39,6 +44,9 @@ export default function CatalogManagement({
   const initialTaskId = intakeIdFromHash()
   const [pane, setPane] = useState<Pane>(initialTaskId ? 'tasks' : 'photos')
   const [fields, setFields] = useState<BookFields>(emptyFields)
+  const [seriesIds, setSeriesIds] = useState<number[]>(
+    targetSeries ? [targetSeries.id] : [],
+  )
   const [manualDirty, setManualDirty] = useState(false)
   const [reviewDirty, setReviewDirty] = useState(false)
   const [addToShelf, setAddToShelf] = useState(false)
@@ -230,9 +238,11 @@ export default function CatalogManagement({
           fields: cleanFields(fields),
           idempotency_key: idempotency.current,
           add_to_shelf: addToShelf,
+          series_ids: seriesIds,
         },
       )
       setFields(emptyFields())
+      setSeriesIds(targetSeries ? [targetSeries.id] : [])
       setManualDirty(false)
       manualCompleted.current = true
       idempotency.current = crypto.randomUUID()
@@ -266,6 +276,7 @@ export default function CatalogManagement({
       const body = new FormData()
       files.forEach((file) => body.append('files', file))
       body.append('mode', mode)
+      if (targetSeries) body.append('target_series_id', String(targetSeries.id))
       const result = await request<{ intake: Intake }>('/book-intakes', {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken() },
@@ -291,6 +302,12 @@ export default function CatalogManagement({
         <h3 id="catalog-management-heading">新增图书</h3>
         <span className="status-tag">管理员</span>
       </div>
+      {targetSeries && pane !== 'tasks' && (
+        <p className="series-target">
+          添加到系列：<strong>{targetSeries.name}</strong> ·
+          照片核对时可逐本修改
+        </p>
+      )}
       <div className="management-tabs" role="group" aria-label="图书录入方式">
         {(
           [
@@ -335,6 +352,20 @@ export default function CatalogManagement({
             disabled={!!busy}
             onField={(key, value) => {
               setFields((previous) => ({ ...previous, [key]: value }))
+              setManualDirty(true)
+            }}
+          />
+          <SeriesSelector
+            value={seriesIds}
+            disabled={!!busy}
+            onAuthRequired={onAuthRequired}
+            onCreated={() => {
+              void onLibraryChanged().catch(() =>
+                setNotice('系列已创建，书目刷新失败，请刷新页面查看。'),
+              )
+            }}
+            onChange={(ids) => {
+              setSeriesIds(ids)
               setManualDirty(true)
             }}
           />
@@ -531,6 +562,7 @@ export default function CatalogManagement({
             <IntakeReview
               key={detail.id}
               initial={detail}
+              onSeries={onManageSeries}
               onIntake={updateTask}
               onConfirmed={onLibraryChanged}
               onAuthRequired={onAuthRequired}

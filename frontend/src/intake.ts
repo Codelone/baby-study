@@ -92,6 +92,7 @@ export type IntakeEvidence = {
   model_name?: string
 }
 export type IntakeGroup = {
+  series_ids?: number[]
   id: string
   photo_ids: string[]
   fields: Partial<BookFields>
@@ -140,6 +141,7 @@ export type ConfirmedBook = {
   created: boolean
 }
 export type Intake = {
+  target_series?: { id: number; name: string } | null
   id: string
   mode: 'batch' | 'realtime'
   status: IntakeStatus

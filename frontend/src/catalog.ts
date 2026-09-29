@@ -81,6 +81,8 @@ export const languageLabels: Record<Language, string> = {
 export function coverage(
   group: Pick<BookSeries, 'total_count' | 'expected_count' | 'completeness'>,
 ) {
+  if (group.expected_count !== null && group.total_count > group.expected_count)
+    return `已收录 ${group.total_count}/${group.expected_count} 本 · 数量冲突，请核对总册数或成员`
   return group.expected_count === null
     ? `已收录 ${group.total_count} 本 · 总册数待核实`
     : `已收录 ${group.total_count}/${group.expected_count} 本 · ${group.completeness === 'complete' ? '分册已完整核实' : '分册待补全'}`

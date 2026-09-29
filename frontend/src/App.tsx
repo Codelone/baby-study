@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import AssessmentArea from './Assessment'
 import CatalogManagement from './CatalogManagement'
+import SeriesWorkspace from './SeriesWorkspace'
+import type { SeriesTarget } from './SeriesWorkspace'
 import CatalogDetails, { Cover } from './CatalogDetails'
 import { coverage, languageLabels } from './catalog'
 import type { Book, BookSeries, Language } from './catalog'
@@ -119,6 +121,7 @@ function loadLibrary(query: string, language: Language | '') {
 }
 
 export default function App() {
+  const [seriesTarget, setSeriesTarget] = useState<SeriesTarget | null>(null)
   const [detailTarget, setDetailTarget] = useState<{
     kind: 'book' | 'series'
     id: number
@@ -181,15 +184,29 @@ export default function App() {
     }
   }
 
+  function openSeries(target: SeriesTarget) {
+    if (
+      managementDirty &&
+      !window.confirm('有未保存修改。打开系列维护会放弃这些修改，确认切换？')
+    )
+      return
+    setDetailTarget(null)
+    setShowManagement(false)
+    setSeriesTarget(target)
+    setSection('catalog')
+    window.history.replaceState(null, '', '#catalog/series')
+  }
+
   function toggleManagement() {
     if (
-      showManagement &&
+      (showManagement || seriesTarget !== null) &&
       managementDirty &&
       !window.confirm(
         '有未保存的图书资料或待上传照片。关闭会放弃这些内容，确认关闭？',
       )
     )
       return
+    setSeriesTarget(null)
     setShowManagement(!showManagement)
     setSection('catalog')
     window.history.replaceState(
@@ -330,9 +347,11 @@ export default function App() {
     (book) =>
       book.series_ids.length === 0 ||
       (normalizedQuery &&
-        [book.title, book.original_title, ...book.aliases].some((name) =>
+        ([book.title, book.original_title, ...book.aliases].some((name) =>
           name.toLocaleLowerCase().includes(normalizedQuery),
-        )),
+        ) ||
+          (!!normalizedQuery.replace(/[- ]/g, '') &&
+            book.isbn.includes(normalizedQuery.replace(/[- ]/g, ''))))),
   )
   const shelfGroups = new Map<
     number,
@@ -367,6 +386,12 @@ export default function App() {
             className="text-button admin-link"
             type="button"
             onClick={() => {
+              if (
+                managementDirty &&
+                !window.confirm('有未保存修改，确认切换到图书录入？')
+              )
+                return
+              setSeriesTarget(null)
               setSection('catalog')
               setShowManagement(true)
               window.history.replaceState(null, '', '#catalog/manage')
@@ -521,9 +546,36 @@ export default function App() {
                   >
                     {showManagement ? '收起图书录入' : '新增图书 / 照片录入'}
                   </button>
+                  <button
+                    type="button"
+                    className="secondary-button management-toggle"
+                    onClick={() => openSeries({ kind: 'create' })}
+                  >
+                    新建系列
+                  </button>
+                  {seriesTarget && (
+                    <SeriesWorkspace
+                      key={
+                        seriesTarget.kind +
+                        ('id' in seriesTarget ? seriesTarget.id : '')
+                      }
+                      initialTarget={seriesTarget}
+                      capabilities={capabilities}
+                      onLibraryChanged={refreshLibrary}
+                      onAuthRequired={requireAuth}
+                      onUnsavedChange={setManagementDirty}
+                      onClose={() => {
+                        setSeriesTarget(null)
+                        window.history.replaceState(null, '', '#catalog')
+                      }}
+                    />
+                  )}
                   {showManagement && (
                     <CatalogManagement
                       capabilities={capabilities}
+                      onManageSeries={(id) =>
+                        openSeries({ kind: 'series', id })
+                      }
                       onLibraryChanged={refreshLibrary}
                       onAuthRequired={requireAuth}
                       onUnsavedChange={setManagementDirty}
@@ -620,6 +672,20 @@ export default function App() {
                                       >
                                         查看套装详情 →
                                       </button>
+                                      {capabilities?.can_manage_catalog && (
+                                        <button
+                                          type="button"
+                                          className="text-button"
+                                          onClick={() =>
+                                            openSeries({
+                                              kind: 'series',
+                                              id: group.id,
+                                            })
+                                          }
+                                        >
+                                          维护系列 →
+                                        </button>
+                                      )}
                                     </div>
                                   </div>
                                   <p className="book-meta">
@@ -730,6 +796,7 @@ export default function App() {
           onBook={(id) => setDetailTarget({ kind: 'book', id })}
           canManage={capabilities?.can_manage_catalog ?? false}
           onArchived={refreshLibrary}
+          onManageSeries={openSeries}
           onAuthRequired={requireAuth}
         />
       )}

@@ -231,7 +231,11 @@ def _prepare_evidence(user, fields, explicit_fields, evidence):
     return prepared, sorted(manual_fields)
 
 
-def create_book(user, fields, idempotency_key="", evidence=None, existing_book_id=None):
+def create_book(
+    user, fields, idempotency_key="", evidence=None, existing_book_id=None, series_ids=None
+):
+    from catalog.series_services import associate_book, validate_series_ids
+
     require_catalog_manager(user)
     serializer = BookCreateFieldsSerializer(data=fields)
     serializer.is_valid(raise_exception=True)
@@ -246,6 +250,8 @@ def create_book(user, fields, idempotency_key="", evidence=None, existing_book_i
             for claim in claims
         ],
     }
+    if series_ids is not None:
+        request_data["series_ids"] = sorted(validate_series_ids(series_ids))
     with transaction.atomic():
         _lock_catalog()
         get_user_model().objects.select_for_update().get(pk=user.pk)
@@ -303,6 +309,8 @@ def create_book(user, fields, idempotency_key="", evidence=None, existing_book_i
                     status="confirmed",
                     defaults=defaults,
                 )
+        if series_ids is not None:
+            associate_book(user, book, series_ids)
         if record:
             record.books.add(book)
             record.status = "confirmed"

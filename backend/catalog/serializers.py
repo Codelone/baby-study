@@ -222,7 +222,7 @@ class PublicURLField(TextField):
 class PositiveCountField(serializers.IntegerField):
     def to_internal_value(self, data):
         if type(data) is not int:
-            raise serializers.ValidationError("页数必须为正整数或 null")
+            raise serializers.ValidationError("数量必须为正整数或 null")
         return super().to_internal_value(data)
 
 
@@ -271,6 +271,7 @@ class BookCreateSerializer(StrictSerializer):
     fields = BookCreateFieldsSerializer()
     idempotency_key = TextField(max_length=255, required=False, allow_blank=True, default="")
     add_to_shelf = ExplicitBooleanField(required=False, default=False)
+    series_ids = serializers.JSONField(required=False)
 
 
 class BookEvidenceInputSerializer(StrictSerializer):
@@ -295,3 +296,29 @@ class BookEvidenceInputSerializer(StrictSerializer):
         if kind == "manual" and attrs["model_name"]:
             raise serializers.ValidationError({"model_name": "人工来源不能声明模型提取"})
         return attrs
+
+
+class SeriesFieldsSerializer(StrictSerializer):
+    name = TextField(max_length=255)
+    description = TextField(required=False, allow_blank=True)
+    family = TextField(max_length=255, required=False, allow_blank=True)
+    aliases = serializers.ListField(child=TextField(max_length=255), required=False, max_length=100)
+    isbn = TextField(max_length=32, required=False, allow_blank=True)
+    cover_url = PublicURLField(max_length=1000, required=False, allow_blank=True)
+    cover_source_url = PublicURLField(max_length=1000, required=False, allow_blank=True)
+    publisher = TextField(max_length=255, required=False, allow_blank=True)
+    publication_date = TextField(max_length=32, required=False, allow_blank=True)
+    edition = TextField(max_length=500, required=False, allow_blank=True)
+    contents = TextField(required=False, allow_blank=True)
+    expected_count = PositiveCountField(
+        min_value=1, max_value=2147483647, required=False, allow_null=True
+    )
+    completeness = serializers.ChoiceField(
+        choices=("unknown", "partial", "complete"), required=False
+    )
+
+    def validate_isbn(self, value):
+        try:
+            return BookCreateFieldsSerializer().validate_isbn(value)
+        except serializers.ValidationError as exc:
+            raise serializers.ValidationError("请输入有效的套装 ISBN-10 或 ISBN-13") from exc

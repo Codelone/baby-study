@@ -68,9 +68,13 @@ def book_detail(request, book_id):
     return Response(BookDetailSerializer(book, context=ownership_context(request)).data)
 
 
-@api_view(["GET"])
+@api_view(["GET", "PATCH"])
 @permission_classes([IsAuthenticated])
 def series_detail(request, series_id):
+    if request.method == "PATCH":
+        from catalog.series_services import save_series
+
+        save_series(request.user, request.data, series_id)
     series = get_object_or_404(series_queryset().prefetch_related("evidence"), pk=series_id)
     return Response(SeriesDetailSerializer(series, context=ownership_context(request)).data)
 
@@ -88,7 +92,10 @@ def books(request):
                 _lock_catalog()
                 get_user_model().objects.select_for_update().get(pk=request.user.pk)
             book, created = create_book(
-                request.user, data["fields"], idempotency_key=data["idempotency_key"]
+                request.user,
+                data["fields"],
+                idempotency_key=data["idempotency_key"],
+                series_ids=data.get("series_ids"),
             )
             if data["add_to_shelf"]:
                 item, _ = ShelfItem.objects.get_or_create(
@@ -113,6 +120,7 @@ def books(request):
     if query:
         queryset = queryset.filter(
             Q(title__icontains=query)
+            | Q(isbn__icontains=(query.replace("-", "").replace(" ", "") or query))
             | Q(aliases__icontains=query)
             | Q(original_title__icontains=query)
             | Q(groups__name__icontains=query)

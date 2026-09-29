@@ -118,6 +118,9 @@ def finish(intake_id, generation, lease_token=None):
             )
             intake.groups = grouped["groups"]
         for group in intake.groups:
+            group.setdefault(
+                "series_ids", [intake.target_series_id] if intake.target_series_id else []
+            )
             fields = group["fields"]
             matches = Book.objects.filter(catalog_status="active")
             if fields.get("isbn"):

@@ -70,6 +70,7 @@ export default function CatalogDetails({
   canManage,
   onArchived,
   onAuthRequired,
+  onManageSeries,
 }: {
   target: { kind: 'book' | 'series'; id: number }
   onClose: () => void
@@ -77,6 +78,7 @@ export default function CatalogDetails({
   canManage: boolean
   onArchived: () => Promise<void>
   onAuthRequired: () => void
+  onManageSeries: (target: { kind: 'book' | 'series'; id: number }) => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const opener = useRef(document.activeElement as HTMLElement | null)
@@ -309,6 +311,16 @@ export default function CatalogDetails({
               <h3>内容与附属材料</h3>
               <p>{series.contents || '附属材料说明待核实'}</p>
             </>
+          )}
+          {canManage && (
+            <button
+              type="button"
+              className="secondary-button"
+              disabled={archiving}
+              onClick={() => onManageSeries(target)}
+            >
+              维护系列 →
+            </button>
           )}
           <h3>资料来源</h3>
           {data.evidence.length ? (
