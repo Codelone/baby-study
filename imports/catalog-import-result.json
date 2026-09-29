@@ -1,0 +1,335 @@
+{
+  "mode": "apply",
+  "records": [
+    {
+      "row": 2,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 3,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 4,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 5,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 6,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 7,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 8,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 9,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 10,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 11,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 12,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 13,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 14,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 15,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 16,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 17,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 18,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 19,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 20,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 21,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 22,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 23,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 24,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 25,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 26,
+      "status": "imported",
+      "entities": 2
+    },
+    {
+      "row": 27,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 28,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 29,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 30,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 31,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 32,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 33,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 34,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 35,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 36,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 37,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 38,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 39,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 40,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 41,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 42,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 43,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 44,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 45,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 46,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 47,
+      "status": "imported",
+      "entities": 2
+    },
+    {
+      "row": 48,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 49,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 50,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 51,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 52,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 53,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 54,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 55,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 56,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 57,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 58,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 59,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 60,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 61,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 62,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 63,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 64,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 65,
+      "status": "pending",
+      "entities": 0
+    },
+    {
+      "row": 66,
+      "status": "imported",
+      "entities": 1
+    },
+    {
+      "row": 67,
+      "status": "pending",
+      "entities": 0
+    }
+  ]
+}

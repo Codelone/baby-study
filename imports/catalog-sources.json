@@ -1,0 +1,3262 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-09-28",
+  "records": {
+    "2": {
+      "queries": [
+        "古力小超人 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15514",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-15514",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "彩虹兔·古力小超人 · 小彼恩点读版（12册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-15514"
+            },
+            "aliases": {
+              "value": [
+                "古力小超人",
+                "彩虹兔 古力小超人 套装12册 点读版"
+              ]
+            },
+            "description": {
+              "value": "古力与朋友一起面对日常生活中的小难题，结合故事和儿歌。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "contents": {
+              "value": "古力与朋友一起面对日常生活中的小难题，结合故事和儿歌。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 12
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "彩虹兔·古力"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1004448"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ]
+    },
+    "3": {
+      "queries": [
+        "古力和他的朋友们 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-17592",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-17592",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "彩虹兔·古力与朋友们 · 小彼恩点读版（12册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-17592"
+            },
+            "aliases": {
+              "value": [
+                "古力和他的朋友们",
+                "彩虹兔Gyuri and Friends 古力与朋友们12册 点读版"
+              ]
+            },
+            "description": {
+              "value": "围绕古力和朋友们的生活故事，认识五感、科学现象并练习日常会话。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "contents": {
+              "value": "围绕古力和朋友们的生活故事，认识五感、科学现象并练习日常会话。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 12
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "彩虹兔·古力"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1021124"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "古力"
+    },
+    "4": {
+      "queries": [
+        "彩虹兔W-PLAY词汇妙趣国 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15483",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-15483",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "彩虹兔·W-PLAY 词汇妙趣国 · 小彼恩点读版（28本）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-15483"
+            },
+            "aliases": {
+              "value": [
+                "彩虹兔W-PLAY词汇妙趣国",
+                "彩虹兔  W PLAY词汇妙趣国  套装"
+              ]
+            },
+            "description": {
+              "value": "职业故事、语言练习和词汇游戏共同构成的英语词汇启蒙套装。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "contents": {
+              "value": "12本职业故事、12本语言学习练习册、4本词汇游戏读物；另含多米诺游戏卡，不计入读物册数。官方礼包称29项，此处仅统计28本实际读物。"
+            },
+            "expected_count": {
+              "value": 28
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "彩虹兔·古力"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1004695"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网 ISBN 栏是无效/内部编号（668800315），保留候选，不写入 ISBN。",
+        "官方29项包含多米诺游戏卡；按12故事+12练习+4游戏读物核实为28本，卡片记为附件。"
+      ],
+      "search_term": "W PLAY"
+    },
+    "5": {
+      "queries": [
+        "QPlay奇问妙想国 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-17636",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-17636",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "彩虹兔·Q-Play 奇问妙想国 · 小彼恩点读版（23册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-17636"
+            },
+            "aliases": {
+              "value": [
+                "QPlay奇问妙想国",
+                "彩虹兔 · Q-Play奇问妙想国 点读版 23册"
+              ]
+            },
+            "description": {
+              "value": "从幼儿熟悉的生活场景出发，通过故事和活动练习常见问答句式。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "contents": {
+              "value": "从幼儿熟悉的生活场景出发，通过故事和活动练习常见问答句式。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 23
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "彩虹兔·古力"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1021636"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Q-Play"
+    },
+    "6": {
+      "queries": [
+        "鹅妈妈童谣 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11197",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:888148",
+          "edition_verified": true,
+          "fields": {
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11197"
+            },
+            "aliases": {
+              "value": [
+                "鹅妈妈童谣"
+              ]
+            },
+            "description": {
+              "value": "收录传统鹅妈妈童谣的唱读读物，含摇篮曲和绕口令等内容。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "title": "title",
+            "language": {
+              "value": "english"
+            },
+            "isbn": "isbn",
+            "reading_attributes": {
+              "value": {
+                "distributor_age": {
+                  "value": "0-9岁",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-11197"
+                },
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此官方页的点读版本",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-11197"
+                }
+              }
+            },
+            "themes": {
+              "value": [
+                "语感启蒙",
+                "动物认知"
+              ]
+            }
+          },
+          "members_verified": false,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888148"
+        }
+      ],
+      "candidates": [],
+      "issues": [],
+      "search_term": "鹅妈妈"
+    },
+    "7": {
+      "queries": [
+        "鳄鱼先生立体书基础认知 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16273",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16273",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "鳄鱼先生立体认知书 · 双语点读版（8册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16273"
+            },
+            "aliases": {
+              "value": [
+                "鳄鱼先生立体书基础认知",
+                "鳄鱼先生立体书基础认知 点读版 套装8册"
+              ]
+            },
+            "description": {
+              "value": "以双语互动立体场景介绍颜色、形状、数字和日常认知。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "鳄鱼先生"
+            },
+            "contents": {
+              "value": "以双语互动立体场景介绍颜色、形状、数字和日常认知。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 8
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "bilingual",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1006193"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网 ISBN 栏是无效/内部编号（978754502877501），保留候选，不写入 ISBN。"
+      ]
+    },
+    "8": {
+      "queries": [
+        "彩虹兔欢唱童谣1 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11205",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11205",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "彩虹兔 Singalong 第一辑 · 小彼恩点读版（12册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11205"
+            },
+            "aliases": {
+              "value": [
+                "彩虹兔欢唱童谣1",
+                "彩虹兔Singalong 欢唱儿歌童谣第一辑 赠琴键卡加点读提手卡 平装加纸板  点读版  盒装"
+              ]
+            },
+            "description": {
+              "value": "童谣与故事两种读物配合的英语启蒙套装，附家长指南与点读卡。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "彩虹兔 Singalong"
+            },
+            "contents": {
+              "value": "童谣与故事两种读物配合的英语启蒙套装，附家长指南与点读卡。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 12
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888139"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Singalong"
+    },
+    "9": {
+      "queries": [
+        "彩虹兔欢唱童谣2 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11200",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11200",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "彩虹兔 Singalong 第二辑 · 小彼恩点读版（12册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11200"
+            },
+            "aliases": {
+              "value": [
+                "彩虹兔欢唱童谣2",
+                "彩虹兔Sing Along欢唱儿歌童谣第二辑 赠琴键卡加点读提手卡 平装加纸板  点读版  盒装"
+              ]
+            },
+            "description": {
+              "value": "第二辑童谣和故事配套读物，含音乐、农场及睡前等主题。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "彩虹兔 Singalong"
+            },
+            "contents": {
+              "value": "第二辑童谣和故事配套读物，含音乐、农场及睡前等主题。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 12
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888138"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Sing Along"
+    },
+    "10": {
+      "queries": [
+        "Let's Grow 24册套装 点读版 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-14087",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-14087",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Highlights Let’s Grow · 小彼恩点读版（24册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-14087"
+            },
+            "aliases": {
+              "value": [
+                "Let's Grow 24册套装 点读版"
+              ]
+            },
+            "description": {
+              "value": "Highlights低幼故事读物，围绕社交、情感、认知和身体等日常主题。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "Highlights低幼故事读物，围绕社交、情感、认知和身体等日常主题。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 24
+            },
+            "completeness": {
+              "value": "partial"
+            },
+            "family": {
+              "value": "Highlights"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888013"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "未在当前公开索引找到可核对的 Highlights 24 册版本目录，需历史盒装版权页。"
+      ],
+      "search_term": "Grow"
+    },
+    "11": {
+      "queries": [
+        "Ladybird Readers Level 1 快乐瓢虫分级读物第一阶 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11189",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11189",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Ladybird Readers 第一阶 · 小彼恩点读版（30册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11189"
+            },
+            "aliases": {
+              "value": [
+                "Ladybird Readers Level 1 快乐瓢虫分级读物第一阶"
+              ]
+            },
+            "description": {
+              "value": "快乐瓢虫第一阶，官方套装为30册；单包音频不作为分册。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "快乐瓢虫第一阶，官方套装为30册；单包音频不作为分册。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 30
+            },
+            "completeness": {
+              "value": "partial"
+            },
+            "family": {
+              "value": "Ladybird Readers"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888128"
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.ladybirdeducation.co.uk/books/ladybird-readers/",
+          "status": "candidate",
+          "reason": "已确认第一阶名称，但原表缺具体盒装 ISBN/年份；不得用当前全品牌目录替代。"
+        }
+      ],
+      "issues": [
+        "已确认第一阶名称，但原表缺具体盒装 ISBN/年份；不得用当前全品牌目录替代。"
+      ],
+      "search_term": "Ladybird Readers Level 1"
+    },
+    "12": {
+      "queries": [
+        "Ladybird Readers Level 1 快乐瓢虫分级读物第二阶 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11185",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": false,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11185",
+          "edition_verified": true,
+          "fields": {
+            "name": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11185"
+            },
+            "aliases": {
+              "value": []
+            },
+            "description": {
+              "value": "官方第二阶15册故事加15册活动书及词汇闪卡；原表级别有冲突。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "官方第二阶15册故事加15册活动书及词汇闪卡；原表级别有冲突。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 30
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ]
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.ladybirdeducation.co.uk/books/ladybird-readers/",
+          "status": "candidate",
+          "reason": "原表英文 Level 1 与中文第二阶冲突，需套装封面/ISBN确认级别。"
+        }
+      ],
+      "issues": [
+        "原表英文 Level 1 与中文第二阶冲突，需套装封面/ISBN确认级别。"
+      ],
+      "search_term": "Ladybird Readers Level 2"
+    },
+    "13": {
+      "queries": [
+        "Ladybird Readers Level 1 快乐瓢虫分级读物第三阶 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11184",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": false,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11184",
+          "edition_verified": true,
+          "fields": {
+            "name": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11184"
+            },
+            "aliases": {
+              "value": []
+            },
+            "description": {
+              "value": "官方第三阶9册故事加9册活动书及闪卡；原表级别有冲突。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "官方第三阶9册故事加9册活动书及闪卡；原表级别有冲突。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 18
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ]
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.ladybirdeducation.co.uk/books/ladybird-readers/",
+          "status": "candidate",
+          "reason": "原表英文 Level 1 与中文第三阶冲突，需套装封面/ISBN确认级别。"
+        }
+      ],
+      "issues": [
+        "原表英文 Level 1 与中文第三阶冲突，需套装封面/ISBN确认级别。"
+      ],
+      "search_term": "Ladybird Readers Level 3"
+    },
+    "14": {
+      "queries": [
+        "Ladybird Readers Level 1 快乐瓢虫分级读物第四阶 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11183",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": false,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11183",
+          "edition_verified": true,
+          "fields": {
+            "name": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11183"
+            },
+            "aliases": {
+              "value": [
+                "Ladybird Readers Level 1 快乐瓢虫分级读物第四阶"
+              ]
+            },
+            "description": {
+              "value": "Ladybird Readers 第四阶套装，含故事读物、配套活动册及词汇闪卡。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "快乐瓢虫"
+            },
+            "contents": {
+              "value": "Ladybird Readers 第四阶套装，含故事读物、配套活动册及词汇闪卡。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 18
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ]
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "原表英文 Level 1 与中文第四阶冲突；当前官网第四阶18册作为候选，尚不导入混级分册。"
+      ],
+      "search_term": "Ladybird Readers Level 4"
+    },
+    "15": {
+      "queries": [
+        "Brown Bear Collection 棕熊四册盒装点读版 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11123",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11123",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Brown Bear Collection · 小彼恩点读版（4册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11123"
+            },
+            "aliases": {
+              "value": [
+                "Brown Bear Collection 棕熊四册盒装点读版"
+              ]
+            },
+            "description": {
+              "value": "通过重复句式和动物形象学习观察、聆听及动物认知的四册绘本套装。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "Brown Bear Collection"
+            },
+            "contents": {
+              "value": "通过重复句式和动物形象学习观察、聆听及动物认知的四册绘本套装。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 4
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888146"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Brown Bear"
+    },
+    "16": {
+      "queries": [
+        "环球英语分级阅读·预备级 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16055",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16055",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "环球英语分级·预备级 · 小彼恩点读版（24册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16055"
+            },
+            "aliases": {
+              "value": [
+                "环球英语分级阅读·预备级 套装24册 点读版",
+                "环球英语分级阅读·预备级"
+              ]
+            },
+            "description": {
+              "value": "环球电影故事的英语预备级点读读物。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "环球电影故事的英语预备级点读读物。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 24
+            },
+            "completeness": {
+              "value": "partial"
+            },
+            "family": {
+              "value": "环球英语分级阅读"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1006216"
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://mall.96192.com/product/detail/900691",
+          "status": "candidate",
+          "reason": "官方/商城可确认预备级24册，具体小彼恩分册页面待定位。"
+        }
+      ],
+      "issues": [
+        "官方/商城可确认预备级24册，具体小彼恩分册页面待定位。"
+      ],
+      "search_term": "环球"
+    },
+    "17": {
+      "queries": [
+        "环球英语分级阅读·基础级 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16054",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16054",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "环球英语分级·基础级 · 小彼恩点读版（16册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16054"
+            },
+            "aliases": {
+              "value": [
+                "环球英语分级阅读·基础级 套装16册 点读版",
+                "环球英语分级阅读·基础级"
+              ]
+            },
+            "description": {
+              "value": "环球电影故事的英语基础级点读读物。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "环球电影故事的英语基础级点读读物。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 16
+            },
+            "completeness": {
+              "value": "partial"
+            },
+            "family": {
+              "value": "环球英语分级阅读"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1006241"
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://detail.youzan.com/show/goods?alias=3nj3mypi87vobn8",
+          "status": "candidate",
+          "reason": "基础级与预备/提高级不得合并；需独立分册目录。"
+        }
+      ],
+      "issues": [
+        "基础级与预备/提高级不得合并；需独立分册目录。"
+      ],
+      "search_term": "环球"
+    },
+    "18": {
+      "queries": [
+        "环球英语分级阅读·提高级 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16056",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16056",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "环球英语分级·提高级 · 小彼恩点读版（16册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16056"
+            },
+            "aliases": {
+              "value": [
+                "环球英语分级阅读·提高级",
+                "环球英语分级阅读·提高级 套装16册 点读版"
+              ]
+            },
+            "description": {
+              "value": "基于环球动画电影故事的英语提高级读物。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "环球英语分级阅读"
+            },
+            "contents": {
+              "value": "基于环球动画电影故事的英语提高级读物。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 16
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1006258"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官方点读包列表为整包，不能当成单本分册；套装资料先入库，分册清单待补。",
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ]
+    },
+    "19": {
+      "queries": [
+        "Maisy Complete with Durable Play Scene小鼠波波趣味场景游戏书 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15234",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-15234",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Maisy 场景游戏书 · 小彼恩点读版（4册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-15234"
+            },
+            "aliases": {
+              "value": [
+                "Maisy Complete with Durable Play Scene小鼠波波趣味场景游戏书",
+                "Maisy Complete with Durable Play Scene小鼠波波趣味场景游戏书 套装4册 英文原版 点读版",
+                "Maisy Complete with Durable Play Scene小鼠波波趣味场景游戏书 "
+              ]
+            },
+            "description": {
+              "value": "以家、农场、商店和幼儿园为场景的四册互动游戏书。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "Maisy"
+            },
+            "contents": {
+              "value": "以家、农场、商店和幼儿园为场景的四册互动游戏书。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 4
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1005378"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Maisy"
+    },
+    "20": {
+      "queries": [
+        "A Maisy First Science Book 小鼠波波第一套科普立体书 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15228",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-15228",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Maisy First Science · 小彼恩点读版（分册待核实）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-15228"
+            },
+            "aliases": {
+              "value": [
+                "A Maisy First Science Book 小鼠波波第一套科普立体书"
+              ]
+            },
+            "description": {
+              "value": "围绕科学主题设计转盘、翻页和抽拉机关的小鼠波波读物；分册范围待进一步核实。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "Maisy"
+            },
+            "contents": {
+              "value": "围绕科学主题设计转盘、翻页和抽拉机关的小鼠波波读物；分册范围待进一步核实。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "completeness": {
+              "value": "unknown"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1005735"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网 ISBN 栏是无效/内部编号（668800318），保留候选，不写入 ISBN。",
+        "官方点读包列表为整包，不能当成单本分册；套装资料先入库，分册清单待补。"
+      ],
+      "search_term": "Maisy"
+    },
+    "21": {
+      "queries": [
+        "小鼠波波Maisy橙盒 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15432",
+          "status": "candidate",
+          "reason": "原表明确非点读，官方橙盒点读版仅作版本候选，不借用点读封面或成员。"
+        }
+      ],
+      "issues": [
+        "原表明确非点读，官方橙盒点读版仅作版本候选，不借用点读封面或成员。"
+      ],
+      "search_term": "Maisy"
+    },
+    "22": {
+      "queries": [
+        "小鼠波波Maisy蓝盒 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11027",
+          "status": "candidate",
+          "reason": "原表明确非点读；官网同时存在新旧蓝盒，需确认实体盒装。"
+        },
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-18296",
+          "status": "candidate",
+          "reason": "原表明确非点读；官网同时存在新旧蓝盒，需确认实体盒装。"
+        }
+      ],
+      "issues": [
+        "原表明确非点读；官网同时存在新旧蓝盒，需确认实体盒装。"
+      ],
+      "search_term": "Maisy"
+    },
+    "23": {
+      "queries": [
+        "《小猪和小象（双语版）》8册 点读版 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15838",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-15838",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "小猪和小象 · 双语点读版（8册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-15838"
+            },
+            "aliases": {
+              "value": [
+                "《小猪和小象（双语版）》8册 点读版"
+              ]
+            },
+            "description": {
+              "value": "小猪与小象的日常故事，以幽默情节讨论友谊和情绪。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "小猪和小象"
+            },
+            "contents": {
+              "value": "小猪与小象的日常故事，以幽默情节讨论友谊和情绪。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 8
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "bilingual",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1006407"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ]
+    },
+    "24": {
+      "queries": [
+        "high five 2022 1-9 杂志 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16998",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "excel:high-five-2022-01-09:point",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Highlights High Five · 2022年1–9月 · 小彼恩点读版"
+            },
+            "cover_url": {
+              "value": ""
+            },
+            "cover_source_url": {
+              "value": ""
+            },
+            "aliases": {
+              "value": []
+            },
+            "description": {
+              "value": "原表指定的2022年1至9月杂志分组。每期独立记录，其他年份和月份不纳入。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "原表指定的2022年1至9月杂志分组。每期独立记录，其他年份和月份不纳入。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 9
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "Highlights High Five"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "手册"
+          ],
+          "member_pattern": "2022年[1-9]月",
+          "member_positions": {
+            "90075": 1,
+            "90074": 2,
+            "90073": 3,
+            "90072": 4,
+            "90071": 5,
+            "90070": 6,
+            "90069": 7,
+            "90068": 8,
+            "90067": 9
+          },
+          "expected_source_id": "1020878"
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16998",
+          "status": "candidate",
+          "reason": "按2022年1至9月期号核对，不复制2021至2023合集的其他期。"
+        }
+      ],
+      "issues": [
+        "按2022年1至9月期号核对，不复制2021至2023合集的其他期。",
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "2022"
+    },
+    "25": {
+      "queries": [
+        "Peek A Boo单词大书游戏升级版 组合装 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-17092",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-17092",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Peek A Boo 游戏升级版 · 小彼恩点读版（6册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-17092"
+            },
+            "aliases": {
+              "value": [
+                "Peek A Boo单词大书游戏升级版 组合装"
+              ]
+            },
+            "description": {
+              "value": "把躲猫猫游戏与物品、单词和场景认知结合的互动读物。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "Peek A Boo"
+            },
+            "contents": {
+              "value": "把躲猫猫游戏与物品、单词和场景认知结合的互动读物。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "expected_count": {
+              "value": 6
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册",
+            "3张贴纸",
+            "点读海报",
+            "卡片"
+          ],
+          "expected_source_id": "1021130"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网 ISBN 栏是无效/内部编号（20240327001），保留候选，不写入 ISBN。"
+      ],
+      "search_term": "Peek"
+    },
+    "26": {
+      "queries": [
+        "I am a Bunny 点读版 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-14362",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:89821",
+          "edition_verified": true,
+          "fields": {
+            "title": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-14362"
+            },
+            "aliases": {
+              "value": [
+                "I am a Bunny 点读版"
+              ]
+            },
+            "description": {
+              "value": "小兔尼古拉斯观察四季变化：花朵、蝴蝶、夏日池塘、秋叶和冬雪。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "language": {
+              "value": "english"
+            },
+            "reading_attributes": {
+              "value": {
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此官方页的点读版本",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-14362"
+                },
+                "distributor_age": {
+                  "value": "0-5岁",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-14362"
+                }
+              }
+            },
+            "isbn": "isbn",
+            "themes": {
+              "value": [
+                "田园风情",
+                " 四季认知",
+                " 游戏互动"
+              ]
+            }
+          },
+          "existing_source_row": 26,
+          "expected_source_id": "89821"
+        },
+        {
+          "url": "https://www.penguinrandomhouse.com/books/154583/i-am-a-bunny-by-ole-risom-illustrated-by-richard-scarry/",
+          "adapter": "structured",
+          "label": "Penguin Random House作品书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:89821",
+          "existing_source_row": 26,
+          "edition_verified": false,
+          "required_text": [
+            "I Am a Bunny",
+            "Ole Risom",
+            "Richard Scarry"
+          ],
+          "fields": {
+            "authors": {
+              "value": [
+                "Ole Risom"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "Richard Scarry"
+              ]
+            },
+            "original_title": {
+              "value": "I am a Bunny"
+            }
+          }
+        }
+      ],
+      "candidates": [],
+      "issues": [],
+      "search_term": "Bunny"
+    },
+    "27": {
+      "queries": [
+        "Llama Llama talking pen editions 羊驼拉玛 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11234",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": false,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11234",
+          "edition_verified": true,
+          "fields": {
+            "name": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11234"
+            },
+            "aliases": {
+              "value": [
+                "Llama Llama talking pen editions 羊驼拉玛"
+              ]
+            },
+            "description": {
+              "value": "羊驼拉玛生活中的情绪与行为故事；当前八册盒装与历史版本需进一步核对。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "lama"
+            },
+            "contents": {
+              "value": "羊驼拉玛生活中的情绪与行为故事；当前八册盒装与历史版本需进一步核对。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 8
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ]
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "原表未注明盒装册数/出版年份；当前官网为八册版本，需核对是否同版，暂保留候选。"
+      ],
+      "search_term": "Llama"
+    },
+    "28": {
+      "queries": [
+        "What's In the Witch's Kitchen 女巫的厨房有什么？ 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://openlibrary.org/search.json?title=What%27s+in+the+Witch%27s+Kitchen&limit=5&fields=key%2Ctitle%2Cauthor_name%2Cedition_key%2Cisbn%2Ceditions",
+          "adapter": "openlibrary",
+          "confirmed": false
+        },
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11133",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:88743",
+          "edition_verified": true,
+          "fields": {
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11133"
+            },
+            "aliases": {
+              "value": []
+            },
+            "description": {
+              "value": "在女巫厨房翻开机关，寻找食物和出人意料的惊喜。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "title": "title",
+            "language": {
+              "value": "english"
+            },
+            "reading_attributes": {
+              "value": {
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此来源点读版本",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-11133"
+                }
+              }
+            }
+          },
+          "members_verified": false,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "existing_source_row": 28,
+          "expected_source_id": "88743"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "原表为小彼恩点读版，出版社原版只能补作品资料，需点读版准确书影。"
+      ],
+      "search_term": "Witch"
+    },
+    "29": {
+      "queries": [
+        "Eric Carle's Story Library 艾瑞・卡尔 昆虫系列四册 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11233",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11233",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Eric Carle’s Story Library 昆虫故事 · 小彼恩点读版（4册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11233"
+            },
+            "aliases": {
+              "value": [
+                "Eric Carle's Story Library 艾瑞・卡尔 昆虫系列四册"
+              ]
+            },
+            "description": {
+              "value": "通过昆虫故事、图片与点读设计认识昆虫及自然。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "Eric Carle’s Story Library"
+            },
+            "contents": {
+              "value": "通过昆虫故事、图片与点读设计认识昆虫及自然。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 4
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "888147"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Story Library"
+    },
+    "30": {
+      "queries": [
+        "early Learing library 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-14027",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-14027",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "Early Learning Library · 小彼恩点读版（7册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-14027"
+            },
+            "aliases": {
+              "value": [
+                "early Learing library",
+                "Early Learning Library 小小早教图书馆7册点读版 盒装"
+              ]
+            },
+            "description": {
+              "value": "七册日常主题认知书，由单词到问答逐步学习英语表达。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "Early Learning Library"
+            },
+            "contents": {
+              "value": "七册日常主题认知书，由单词到问答逐步学习英语表达。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 7
+            },
+            "completeness": {
+              "value": "partial"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1001895"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "Early Learning"
+    },
+    "31": {
+      "queries": [
+        "鸭子骑车记 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.scholastic.com/titles/nodavid/davidshannon.htm",
+          "adapter": "structured",
+          "label": "Scholastic 官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "excel:row:31:unresolved-edition",
+          "existing_source_row": 31,
+          "edition_verified": false,
+          "required_text": [
+            "Duck on a Bike",
+            "David Shannon",
+            "David Shannon"
+          ],
+          "fields": {
+            "authors": {
+              "value": [
+                "David Shannon"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "David Shannon"
+              ]
+            },
+            "original_title": {
+              "value": "Duck on a Bike"
+            }
+          }
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.readinglife.com/static/cms/download/AxsSpring2023.pdf",
+          "status": "candidate",
+          "reason": "存在南海/新星等中文版本，ISBN/页数/译者待核对；仅补可靠作品作者。"
+        }
+      ],
+      "issues": [
+        "存在南海/新星等中文版本，ISBN/页数/译者待核对；作品作者已由出版社网页核对，采集若失败则不导入；不借用英文版ISBN、页数或封面。",
+        "新增官方作品来源，仅确认原文名、作者与绘者；原表实体版本的ISBN/出版时间/装帧/封面/阅读等级仍待核实。"
+      ]
+    },
+    "32": {
+      "queries": [
+        "情绪小怪兽 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.annallenas.com/ilustracion-editorial/the-color-monster-us.html",
+          "adapter": "structured",
+          "label": "Anna Llenas 作者官网",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "excel:row:32:unresolved-edition",
+          "existing_source_row": 32,
+          "edition_verified": false,
+          "required_text": [
+            "The Color Monster",
+            "Anna Llenas",
+            "Anna Llenas"
+          ],
+          "fields": {
+            "authors": {
+              "value": [
+                "Anna Llenas"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "Anna Llenas"
+              ]
+            },
+            "original_title": {
+              "value": "The Color Monster"
+            }
+          }
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "情绪小怪兽有平面/立体/不同译名版本，原表缺版本，不能借用其他封面。",
+        "新增官方作品来源，仅确认原文名、作者与绘者；原表实体版本的ISBN/出版时间/装帧/封面/阅读等级仍待核实。"
+      ]
+    },
+    "33": {
+      "queries": [
+        "波西和皮普 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.fltrp.com/c/2022-10-19/514286.shtml",
+          "status": "candidate",
+          "reason": "波西和皮普存在多套及新增分册，原表未注明套装范围。"
+        }
+      ],
+      "issues": [
+        "波西和皮普存在多套及新增分册，原表未注明套装范围。"
+      ]
+    },
+    "34": {
+      "queries": [
+        "大大的和小小的 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [],
+      "issues": [
+        "仅凭名称无法确定同名绘本作者及版本，保留原记录。"
+      ]
+    },
+    "35": {
+      "queries": [
+        "小金鱼逃走了 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024785894",
+          "adapter": "structured",
+          "label": "官方书目/图书馆作品资料",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "legacy:图书列表.xlsx:35",
+          "existing_source_row": 35,
+          "edition_verified": false,
+          "fields": {
+            "authors": {
+              "value": [
+                "五味太郎"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "五味太郎"
+              ]
+            }
+          },
+          "required_text": [
+            "小金鱼逃走了"
+          ]
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024785894",
+          "status": "candidate",
+          "reason": "已检索到新星及信谊版本，需版权页区分；只补作品作者。"
+        },
+        {
+          "url": "https://ci.nii.ac.jp/ncid/BA74977163",
+          "status": "candidate",
+          "reason": "已检索到新星及信谊版本，需版权页区分；只补作品作者。"
+        }
+      ],
+      "issues": [
+        "已检索到新星及信谊版本，需版权页区分；只补作品作者。"
+      ]
+    },
+    "36": {
+      "queries": [
+        "小猫汤米1-4 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://store.dangdang.com/862/list.html?inner_cat=10000008620010011",
+          "status": "candidate",
+          "reason": "1-4可能指前四辑而非四本；出版社店铺第一辑为10册，不能按4本拆分。"
+        }
+      ],
+      "issues": [
+        "1-4可能指前四辑而非四本；出版社店铺第一辑为10册，不能按4本拆分。"
+      ]
+    },
+    "37": {
+      "queries": [
+        "安东先生 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [],
+      "issues": [
+        "安东先生包含多本书，原表未注明具体套装版本和成员。"
+      ]
+    },
+    "38": {
+      "queries": [
+        "儿童汽车故事绘本 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [],
+      "issues": [
+        "泛称儿童汽车故事绘本未定位唯一书目；需要完整封面/ISBN。"
+      ]
+    },
+    "39": {
+      "queries": [
+        "猜猜我有多爱你 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://item.xhsd.com/items/1010000103355766",
+          "adapter": "structured",
+          "label": "官方书目/图书馆作品资料",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "legacy:图书列表.xlsx:39",
+          "existing_source_row": 39,
+          "edition_verified": false,
+          "fields": {
+            "authors": {
+              "value": [
+                "Sam McBratney"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "Anita Jeram"
+              ]
+            }
+          },
+          "required_text": [
+            "猜猜我有多爱你"
+          ]
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://item.xhsd.com/items/1010000103355766",
+          "status": "candidate",
+          "reason": "存在多个中文版本/装帧，仅补作品作者和绘者，不绑定未确认中文ISBN。"
+        }
+      ],
+      "issues": [
+        "存在多个中文版本/装帧，仅补作品作者和绘者，不绑定未确认中文ISBN。"
+      ]
+    },
+    "40": {
+      "queries": [
+        "迪士尼睡前故事 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [],
+      "issues": [
+        "迪士尼睡前故事存在合订本及多个套装，原表未注明具体版本。"
+      ]
+    },
+    "41": {
+      "queries": [
+        "儿童培养系列 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [],
+      "issues": [
+        "泛称儿童培养系列不足以确定书名/出版方/分册。"
+      ]
+    },
+    "42": {
+      "queries": [
+        "Who Belongs谁属于这里 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://openlibrary.org/search.json?title=Who+Belongs&limit=5&fields=key%2Ctitle%2Cauthor_name%2Cedition_key%2Cisbn%2Ceditions",
+          "adapter": "openlibrary",
+          "confirmed": false
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.gaishitongshu.cn/newsinfo/3112298.html",
+          "status": "candidate",
+          "reason": "官方盖世目录确认品牌支持该作品，具体版本书影/ISBN待核对。"
+        }
+      ],
+      "issues": [
+        "官方盖世目录确认品牌支持该作品，具体版本书影/ISBN待核对。"
+      ]
+    },
+    "43": {
+      "queries": [
+        "Open the Barn Door 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-14446",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:89981",
+          "edition_verified": true,
+          "fields": {
+            "title": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-14446"
+            },
+            "aliases": {
+              "value": [
+                "Open the Barn Door"
+              ]
+            },
+            "description": {
+              "value": "打开翻页认识农场动物，观察动物形态并听到它们的叫声。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "language": {
+              "value": "english"
+            },
+            "reading_attributes": {
+              "value": {
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此官方页的点读版本",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-14446"
+                },
+                "distributor_age": {
+                  "value": " 0-3岁 ",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-14446"
+                }
+              }
+            },
+            "isbn": "isbn",
+            "themes": {
+              "value": [
+                "农场动物 ",
+                "英语启蒙"
+              ]
+            }
+          },
+          "existing_source_row": 43,
+          "expected_source_id": "89981"
+        }
+      ],
+      "candidates": [],
+      "issues": [],
+      "search_term": "Barn"
+    },
+    "44": {
+      "queries": [
+        "All change 惊喜派对 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16253",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16253",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "All Change! · 小彼恩点读版（4册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16253"
+            },
+            "aliases": {
+              "value": [
+                "All change 4册",
+                "All change 惊喜派对"
+              ]
+            },
+            "description": {
+              "value": "对应食物、工作、动物和派对主题的四册抽拉换装书。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "对应食物、工作、动物和派对主题的四册抽拉换装书。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 4
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "All Change!"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "existing_member_mappings": {
+            "1006863": 44
+          },
+          "raw_row": 44,
+          "expected_source_id": "1006859"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官方 All Change 四册中已确认 Party 为原表“惊喜派对”；复用原书籍ID及书架状态，其余3册按来源ID新增。"
+      ],
+      "search_term": "All Change"
+    },
+    "45": {
+      "queries": [
+        "jobs we do 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [],
+      "issues": [
+        "Jobs We Do 同名多个职业认知读物，未找到唯一点读版本。"
+      ],
+      "search_term": "Jobs"
+    },
+    "46": {
+      "queries": [
+        "趣味科普立体书 4册套装 点读版 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.lelequ.com/h-pd-198.html",
+          "status": "candidate",
+          "reason": "中文和英文趣味科普立体书不可混用；原表英文四册需核实目录。"
+        }
+      ],
+      "issues": [
+        "中文和英文趣味科普立体书不可混用；原表英文四册需核实目录。"
+      ],
+      "search_term": "趣味科普"
+    },
+    "47": {
+      "queries": [
+        "From Head to Toe 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11020",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:88928",
+          "edition_verified": true,
+          "fields": {
+            "title": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11020"
+            },
+            "aliases": {
+              "value": [
+                "From Head to Toe"
+              ]
+            },
+            "description": {
+              "value": "通过动物动作和重复问答，引导孩子模仿身体动作、认识身体部位。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "language": {
+              "value": "english"
+            },
+            "reading_attributes": {
+              "value": {
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此官方页的点读版本",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-11020"
+                },
+                "distributor_age": {
+                  "value": "2-5岁",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-11020"
+                }
+              }
+            },
+            "isbn": "isbn",
+            "themes": {
+              "value": [
+                " 动物认知 ",
+                "单词学习"
+              ]
+            }
+          },
+          "existing_source_row": 47,
+          "expected_source_id": "88928"
+        },
+        {
+          "url": "https://www.xiaobien.com/parenting/grow_list/detail/69",
+          "adapter": "structured",
+          "label": "小彼恩官方作品导读",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:88928",
+          "existing_source_row": 47,
+          "edition_verified": false,
+          "required_text": [
+            "From Head to Toe",
+            "Eric Carle"
+          ],
+          "fields": {
+            "authors": {
+              "value": [
+                "Eric Carle"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "Eric Carle"
+              ]
+            },
+            "original_title": {
+              "value": "From Head to Toe"
+            }
+          }
+        }
+      ],
+      "candidates": [],
+      "issues": [],
+      "search_term": "Head to Toe"
+    },
+    "48": {
+      "queries": [
+        "My First Book of Words 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-11273",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-11273",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "My First Book of Words · 小彼恩点读版（2册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-11273"
+            },
+            "aliases": {
+              "value": [
+                "My First Book of Words",
+                "My First Book of Words 两册 点读版",
+                "My First Book of Words "
+              ]
+            },
+            "description": {
+              "value": "两册实物照片单词认知读物，分别关注常见事物与动物。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "My First Book of Words"
+            },
+            "contents": {
+              "value": "两册实物照片单词认知读物，分别关注常见事物与动物。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 2
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "archive_source_row": 48,
+          "expected_source_id": "888087"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网 ISBN 栏是无效/内部编号（668800199），保留候选，不写入 ISBN。",
+        "现有单本记录误代表两册套装：旧ID保留为历史导入映射，实际成员使用官方分册标识。"
+      ],
+      "search_term": "Words"
+    },
+    "49": {
+      "queries": [
+        "国学童韵认知套餐（12册+贴书1本+挂图1张+便携卡+手册1册 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16680",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16680",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "国学童韵认知 · 小彼恩点读版（12册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16680"
+            },
+            "aliases": {
+              "value": [
+                "国学童韵认知套餐（12册+贴书1本+挂图1张+便携卡+手册1册",
+                "小彼恩点读国学童韵认知套装"
+              ]
+            },
+            "description": {
+              "value": "以童谣和认知主题开展国学启蒙，套装附有贴书、挂图、便携卡和家长材料。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "小彼恩国学童韵"
+            },
+            "contents": {
+              "value": "以童谣和认知主题开展国学启蒙，套装附有贴书、挂图、便携卡和家长材料。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 12
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "chinese",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册",
+            "趣味贴贴书"
+          ],
+          "expected_source_id": "1017403"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网 ISBN 栏是无效/内部编号（6975339560843），保留候选，不写入 ISBN。",
+        "12册儿童读物已从官方分册表核对；额外贴贴书按原表附件说明保留，不计读物册数。"
+      ],
+      "search_term": "国学"
+    },
+    "50": {
+      "queries": [
+        "嘎吱小怪兽 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-17603",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-17603",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "小怪兽嘎吱 · 小彼恩点读版（4册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-17603"
+            },
+            "aliases": {
+              "value": [
+                "嘎吱小怪兽",
+                "小怪兽嘎吱  4册套装 点读版"
+              ]
+            },
+            "description": {
+              "value": "吃书小怪兽嘎吱闯入不同故事，在四册互动绘本里展开冒险。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "小怪兽嘎吱"
+            },
+            "contents": {
+              "value": "吃书小怪兽嘎吱闯入不同故事，在四册互动绘本里展开冒险。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 4
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "chinese",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1022288"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ],
+      "search_term": "嘎吱"
+    },
+    "51": {
+      "queries": [
+        "红火箭蓝盒 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.gaishitongshu.cn/ProductInfoCategory?categoryId=543577",
+          "status": "candidate",
+          "reason": "蓝盒版本/年份及成员目录待核实，不采用网络175册等未经版本匹配的清单。"
+        }
+      ],
+      "issues": [
+        "蓝盒版本/年份及成员目录待核实，不采用网络175册等未经版本匹配的清单。"
+      ]
+    },
+    "52": {
+      "queries": [
+        "Good Night Gorilla 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://openlibrary.org/search.json?title=Good+Night+Gorilla&limit=5&fields=key%2Ctitle%2Cauthor_name%2Cedition_key%2Cisbn%2Ceditions",
+          "adapter": "openlibrary",
+          "confirmed": false
+        },
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-10940",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:89649",
+          "edition_verified": true,
+          "fields": {
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-10940"
+            },
+            "aliases": {
+              "value": []
+            },
+            "description": {
+              "value": "夜晚的大猩猩悄悄打开动物笼子，跟着管理员回到家，展开有趣的睡前故事。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "title": "title",
+            "language": {
+              "value": "english"
+            },
+            "reading_attributes": {
+              "value": {
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此官方页的点读版本",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-10940"
+                },
+                "distributor_age": {
+                  "value": "0-3岁  ",
+                  "status": "confirmed",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-10940"
+                }
+              }
+            },
+            "themes": {
+              "value": [
+                "睡前故事 ",
+                "英语启蒙"
+              ]
+            }
+          },
+          "members_verified": false,
+          "member_language": "english",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "existing_source_row": 52,
+          "expected_source_id": "89649"
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://library.nashville.gov/blog/2021/10/goodnight-books",
+          "status": "candidate",
+          "reason": "原表点读版与出版社普通版本须区分，作品作者可补。"
+        }
+      ],
+      "issues": [
+        "原表点读版与出版社普通版本须区分，作品作者可补。"
+      ],
+      "search_term": "Gorilla"
+    },
+    "53": {
+      "queries": [
+        "十一桃sss童谣 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://post.smzdm.com/p/a8xmr0n6/",
+          "status": "candidate",
+          "reason": "十一桃自制SSS歌词本有上下册、闪卡不同组合；未取得可靠授权书目与成员表。"
+        }
+      ],
+      "issues": [
+        "十一桃自制SSS歌词本有上下册、闪卡不同组合；未取得可靠公开书目与成员表。"
+      ]
+    },
+    "54": {
+      "queries": [
+        "super hammy 1 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.dclearningtime.com/super-hammy-my-first-reading-series/",
+          "status": "candidate",
+          "reason": "super hammy 1 很可能是15册套装简称，但小蝌蚪版本/进口标识未核实；保留原ID待确认，不传播状态。"
+        },
+        {
+          "url": "https://dc-canada.ca/products/super-hammy-my-first-reading-series-set",
+          "status": "candidate",
+          "reason": "super hammy 1 很可能是15册套装简称，但小蝌蚪版本/进口标识未核实；保留原ID待确认，不传播状态。"
+        }
+      ],
+      "issues": [
+        "super hammy 1 很可能是15册套装简称，但小蝌蚪版本/进口标识未核实；保留原ID待确认，不传播状态。"
+      ]
+    },
+    "55": {
+      "queries": [
+        "super hammy 2 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://blueberryhillbooks.com/can/super-hammy-and-the-big-fish.html",
+          "status": "candidate",
+          "reason": "super hammy 2 很可能是套装简称；不得与DC Canada当前第一套混并；原ID保留待确认。"
+        }
+      ],
+      "issues": [
+        "super hammy 2 很可能是套装简称；不得与DC Canada当前第一套混并；原ID保留待确认。"
+      ]
+    },
+    "56": {
+      "queries": [
+        "诗念中国 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-15935",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-15935",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "诗念中国 · 小彼恩点读版（6册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-15935"
+            },
+            "aliases": {
+              "value": [
+                "诗念中国",
+                "诗念中国 点读版 6册套装"
+              ]
+            },
+            "description": {
+              "value": "以双语绘本和点读活动引入古诗词、汉字及英语表达。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "family": {
+              "value": "诗念中国"
+            },
+            "contents": {
+              "value": "以双语绘本和点读活动引入古诗词、汉字及英语表达。 卡片、挂图、音频、家长手册等附属材料不计读物册数。"
+            },
+            "expected_count": {
+              "value": 6
+            },
+            "completeness": {
+              "value": "complete"
+            }
+          },
+          "members_verified": true,
+          "member_language": "chinese",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1007278"
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "官网产品ISBN保留在候选解析结果；未独立确认套装书号时不写入套装ISBN。"
+      ]
+    },
+    "57": {
+      "queries": [
+        "我的小小自然启蒙 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-16730",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "series",
+          "identity_key": "xiaobien:set:product-16730",
+          "edition_verified": true,
+          "fields": {
+            "name": {
+              "value": "我的小小自然启蒙翻翻书 · 小彼恩点读版（4册）"
+            },
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-16730"
+            },
+            "aliases": {
+              "value": [
+                "我的小小自然启蒙翻翻书 套装4册 点读版",
+                "我的小小自然启蒙"
+              ]
+            },
+            "description": {
+              "value": "结合翻翻机关、歌谣和图片，认识自然与昆虫的中文启蒙读物。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以官方产品页限定版本"
+            },
+            "contents": {
+              "value": "结合翻翻机关、歌谣和图片，认识自然与昆虫的中文启蒙读物。 附属卡片、贴纸、家长手册及整包音频不计为儿童读物。"
+            },
+            "expected_count": {
+              "value": 4
+            },
+            "completeness": {
+              "value": "complete"
+            },
+            "family": {
+              "value": "我的小小自然启蒙翻翻书"
+            }
+          },
+          "members_verified": true,
+          "member_language": "chinese",
+          "exclude_members": [
+            "资源卡",
+            "父母手册",
+            "双语手册",
+            "琴键卡",
+            "游戏卡",
+            "词卡",
+            "点读卡",
+            "挂图",
+            "便携卡",
+            "手册"
+          ],
+          "expected_source_id": "1018390"
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://tao.hooos.com/goods_q8gx3vI2t4ZY0ennjCggwHWt0-aAZjjVSd3kXV4RWTq.html",
+          "status": "candidate",
+          "reason": "检索到四册中文点读套装，未取得可核实各册版本来源；保留候选。"
+        }
+      ],
+      "issues": [
+        "已从官方分册表核实蜜蜂、瓢虫、蚂蚁、毛毛虫四册及各册来源ID；单册ISBN仍待核实。"
+      ],
+      "search_term": "自然启蒙"
+    },
+    "58": {
+      "queries": [
+        "大美照片书 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://detail.youzan.com/show/goods?alias=2g0c2wds5ir6ay6",
+          "status": "candidate",
+          "reason": "官方微商城为三本大美照片书/可选单本；原表未注明选购规格。"
+        }
+      ],
+      "issues": [
+        "官方微商城为三本大美照片书/可选单本；原表未注明选购规格。"
+      ]
+    },
+    "59": {
+      "queries": [
+        "橡树林的故事 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://yuntaigo.com/book.action?recordid=b2hrYm1rYWMyMTMwMDc1OA%3D%3D",
+          "status": "candidate",
+          "reason": "橡树林有8册双语翻翻书和4册点读认知书，原表非点读需匹配准确版本。"
+        }
+      ],
+      "issues": [
+        "橡树林有8册双语翻翻书和4册点读认知书，原表非点读需匹配准确版本。"
+      ]
+    },
+    "60": {
+      "queries": [
+        "爱折腾的小蓝象 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://book.douban.com/subject/30443703/",
+          "status": "candidate",
+          "reason": "小蓝象有不同年份版本六册，需确认实体套装，不混入其他作品。"
+        }
+      ],
+      "issues": [
+        "小蓝象有不同年份版本六册，需确认实体套装，不混入其他作品。"
+      ]
+    },
+    "61": {
+      "queries": [
+        "东方童谣 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.xiaobien.com/product/detail/diandubao-17593",
+          "adapter": "xiaobien",
+          "label": "小彼恩官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "xiaobien:book:1022287",
+          "edition_verified": true,
+          "fields": {
+            "title": "title",
+            "cover_url": "cover_url",
+            "cover_source_url": {
+              "value": "https://www.xiaobien.com/product/detail/diandubao-17593"
+            },
+            "aliases": {
+              "value": [
+                "东方童谣"
+              ]
+            },
+            "description": {
+              "value": "精选中国民间童谣，结合朗诵与歌唱，涵盖数字、自然、节日和想象等主题。"
+            },
+            "edition": {
+              "value": "小彼恩点读版；以此官方产品页为版本范围"
+            },
+            "language": {
+              "value": "chinese"
+            },
+            "reading_attributes": {
+              "value": {
+                "point_reading": {
+                  "value": "小彼恩；仅适用于此来源点读版本",
+                  "source_url": "https://www.xiaobien.com/product/detail/diandubao-17593",
+                  "status": "confirmed"
+                }
+              }
+            },
+            "isbn": "isbn"
+          },
+          "existing_source_row": null,
+          "expected_source_id": "1022287"
+        }
+      ],
+      "candidates": [],
+      "issues": []
+    },
+    "62": {
+      "queries": [
+        "心智麦田 莫奈的猫 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://openlibrary.org/search.json?title=Monet%27s+Cat&limit=5&fields=key%2Ctitle%2Cauthor_name%2Cedition_key%2Cisbn%2Ceditions",
+          "adapter": "openlibrary",
+          "confirmed": false
+        },
+        {
+          "url": "https://www.penguinrandomhouse.com/books/653318/monets-cat-by-lily-murray-and-becky-cameron/",
+          "adapter": "prh",
+          "label": "Penguin Random House 官方书目",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "excel:row:62:unresolved-edition",
+          "existing_source_row": 62,
+          "edition_verified": false,
+          "required_text": [
+            "Monet's Cat",
+            "Lily Murray",
+            "Becky Cameron"
+          ],
+          "fields": {
+            "authors": {
+              "value": [
+                "Lily Murray"
+              ]
+            },
+            "illustrators": {
+              "value": [
+                "Becky Cameron"
+              ]
+            },
+            "original_title": {
+              "value": "Monet's Cat"
+            }
+          }
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.jd.com/hotitem/17131fa3219734599b6e.html",
+          "status": "candidate",
+          "reason": "可识别 Monet’s Cat 作品，心智麦田点读版ISBN/封面待核实。"
+        }
+      ],
+      "issues": [
+        "可识别 Monet’s Cat 作品，心智麦田点读版ISBN/封面待核实。",
+        "新增官方作品来源，仅确认原文名、作者与绘者；原表实体版本的ISBN/出版时间/装帧/封面/阅读等级仍待核实。"
+      ]
+    },
+    "63": {
+      "queries": [
+        "RAZ B级别 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://www.learninga-z.com/site/resources/breakroom-blog/benchmark-passages",
+          "status": "candidate",
+          "reason": "RAZ B是阅读级别，动态电子目录不等于实体套装；需具体已购目录/印制版本。"
+        }
+      ],
+      "issues": [
+        "RAZ B是阅读级别，动态电子目录不等于实体套装；需具体已购目录/印制版本。"
+      ]
+    },
+    "64": {
+      "queries": [
+        "鼹鼠太太我回来了 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://openlibrary.org/search.json?title=Mrs+Mole+I+am+home&limit=5&fields=key%2Ctitle%2Cauthor_name%2Cedition_key%2Cisbn%2Ceditions",
+          "adapter": "openlibrary",
+          "confirmed": false
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "未定位与原表名称一致的筑桥官方书目，可能有标题差异；保留原记录。"
+      ]
+    },
+    "65": {
+      "queries": [
+        "三只小鲨鱼 出版社 点读 目录"
+      ],
+      "sources": [],
+      "candidates": [
+        {
+          "url": "https://wiki.smzdm.com/p/d6qn556/",
+          "status": "candidate",
+          "reason": "三只小鲨鱼可能为三册套装或其中一本；原表未说明且有套装候选，暂不拆分。"
+        }
+      ],
+      "issues": [
+        "三只小鲨鱼可能为三册套装或其中一本；原表未说明且有套装候选，暂不拆分。"
+      ],
+      "search_term": "Sharks"
+    },
+    "66": {
+      "queries": [
+        "丽声快乐自然拼读歌曲歌谣 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://www.fltrp.com/c/2019-11-04/494593.shtml",
+          "adapter": "fltrp",
+          "label": "外语教学与研究出版社",
+          "confirmed": true,
+          "kind": "book",
+          "identity_key": "fltrp:9787521310832",
+          "edition_verified": true,
+          "fields": {
+            "title": {
+              "value": "丽声快乐自然拼读歌曲歌谣"
+            },
+            "isbn": {
+              "value": "9787521310832"
+            },
+            "publisher": {
+              "value": "外语教学与研究出版社"
+            },
+            "language": {
+              "value": "english"
+            },
+            "description": {
+              "value": "以40首歌曲结合肢体动作，学习字母与字母组合的发音。一本教材，不按歌曲拆成分册。"
+            },
+            "edition": {
+              "value": "外研社2019年发布教材；以此ISBN为版本范围"
+            }
+          }
+        }
+      ],
+      "candidates": [
+        {
+          "url": "https://www.fltrp.com/c/2019-11-04/494593.shtml",
+          "status": "candidate",
+          "reason": "官方书目是一本含40首歌曲的教材，不按歌曲拆40本。"
+        }
+      ],
+      "issues": [
+        "官方书目是一本含40首歌曲的教材，不按歌曲拆40本。"
+      ]
+    },
+    "67": {
+      "queries": [
+        "筑桥The Big Book of...科普大书 出版社 点读 目录"
+      ],
+      "sources": [
+        {
+          "url": "https://openlibrary.org/search.json?title=The+Big+Book+of+Bugs&limit=5&fields=key%2Ctitle%2Cauthor_name%2Cedition_key%2Cisbn%2Ceditions",
+          "adapter": "openlibrary",
+          "confirmed": false
+        }
+      ],
+      "candidates": [],
+      "issues": [
+        "The Big Book of... 未指明主题；不能把全部该系列书籍加入一个未核实套装。"
+      ],
+      "search_term": "Big Book"
+    }
+  }
+}

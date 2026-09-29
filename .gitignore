@@ -1,0 +1,14 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+.DS_Store
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+backend/staticfiles/
+*.sqlite3
+imports/.cache/
+imports/baseline-catalog.json

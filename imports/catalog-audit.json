@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-28",
+  "checks": {
+    "original_book_ids_retained": true,
+    "original_sources_historical_notes_retained": true,
+    "all_original_shelf_fields_unchanged": true,
+    "all_66_raw_records_retained": true,
+    "all_isbns_valid": true,
+    "all_field_claims_traceable": true,
+    "no_temporary_accounts_or_books": true,
+    "english_single_author_and_cover": true,
+    "chinese_work_only_has_no_borrowed_edition": true,
+    "point_set_28_readers_no_game_card": true,
+    "graded_set_no_fabricated_members": true,
+    "magazine_exact_months_and_order": true,
+    "original_chinese_alias_still_searchable": true
+  },
+  "original_book_count": 19,
+  "original_shelf_count": 3,
+  "book_count": 191,
+  "active_book_count": 190,
+  "series_count": 27,
+  "evidence_count": 1533,
+  "workbook_sha256": "6081fbd7a8cf508477bfdec0db7df209aba3d74854d8a581fbef93b0ae0720ae"
+}

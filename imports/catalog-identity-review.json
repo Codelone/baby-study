@@ -1,0 +1,65 @@
+[
+  {
+    "row": 6,
+    "book_id": 96,
+    "old_key": "xiaobien:book:product-11197",
+    "canonical_key": "xiaobien:book:888148",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-11197",
+    "collected_at": "2026-09-28T11:59:58.311593+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  },
+  {
+    "row": 26,
+    "book_id": 1,
+    "old_key": "xiaobien:book:product-14362",
+    "canonical_key": "xiaobien:book:89821",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-14362",
+    "collected_at": "2026-09-28T12:00:20.405519+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  },
+  {
+    "row": 28,
+    "book_id": 2,
+    "old_key": "xiaobien:book:product-11133",
+    "canonical_key": "xiaobien:book:88743",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-11133",
+    "collected_at": "2026-09-28T12:08:31.902479+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  },
+  {
+    "row": 43,
+    "book_id": 9,
+    "old_key": "xiaobien:book:product-14446",
+    "canonical_key": "xiaobien:book:89981",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-14446",
+    "collected_at": "2026-09-28T12:00:28.449802+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  },
+  {
+    "row": 47,
+    "book_id": 12,
+    "old_key": "xiaobien:book:product-11020",
+    "canonical_key": "xiaobien:book:88928",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-11020",
+    "collected_at": "2026-09-28T12:00:30.460542+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  },
+  {
+    "row": 52,
+    "book_id": 14,
+    "old_key": "xiaobien:book:product-10940",
+    "canonical_key": "xiaobien:book:89649",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-10940",
+    "collected_at": "2026-09-28T12:08:35.892390+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  },
+  {
+    "row": 61,
+    "book_id": 191,
+    "old_key": "xiaobien:book:product-17593",
+    "canonical_key": "xiaobien:book:1022287",
+    "source_url": "https://www.xiaobien.com/product/detail/diandubao-17593",
+    "collected_at": "2026-09-28T12:00:40.530585+00:00",
+    "reason": "统一采用官方版本book_id，与套装分册来源ID共享同一标识；PK/书架不变"
+  }
+]
