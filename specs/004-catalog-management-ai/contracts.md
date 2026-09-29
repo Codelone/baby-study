@@ -16,7 +16,7 @@
 
 - `Book.catalog_status`: active / legacy / archived；新增 `archived_at`。归档保留关系、书架和历史，活动查询过滤 active。
 - `SourceEvidence`: 现有字段保留；新增 `origin_kind` (web/manual/photo)、`photo` (可空引用 IntakePhoto)、`model_name`、`confirmed_by` (可空用户)；source_url 允许空。照片不伪装成网页证据，人工确认不自动成为权威分级依据。
-- `BookIntake`: UUID id，user，mode (batch/realtime)，status (queued/processing/awaiting_confirmation/partial_failure/failed/cancelled/confirmed)，revision (从 1 开始)，groups (JSON 列表)，unassigned_photo_ids (JSON 列表)，errors (JSON 列表)，progress (JSON)，confirmed_books (JSON)，generation (从 1 开始)，created_at/updated_at。
+- `BookIntake`: UUID id，user，mode (batch/realtime)，status (queued/processing/awaiting_confirmation/partial_failure/failed/cancelled/confirmed)，revision (从 1 开始)，groups (JSON 列表)，unassigned_photo_ids (JSON 列表)，errors (JSON 列表)，progress (JSON)，confirmed_books (JSON)，generation (从 1 开始)，has_manual_edits，lease_expires_at/lease_token，created_at/updated_at。租约使用独立 token，旧执行者不能回填或释放新租约。
 - `IntakePhoto`: UUID id，intake，file (私有 FileField)，original_name，sha256，status (pending/processing/succeeded/failed)，extraction (JSON)，error (JSON)，created_at。同一 intake+sha256 唯一，重复照片复用。
 - `IntakeBatch`: UUID id，intake，generation，status，input_file_id，provider_batch_id，output_file_id，error_file_id，requests (custom_id/photo_id 映射 JSON)，errors (JSON)，created_at/updated_at。供应商提交状态不明确时不盲目重提。
 
@@ -57,15 +57,20 @@
 
 - `GET /catalog-capabilities` -> `{can_manage_catalog, realtime_configured, batch_configured}`，均 boolean，绝不返回密钥。
 - `POST /books` JSON `{fields, idempotency_key?, add_to_shelf?}` -> `{book: BookDetail, created: boolean}`；管理员。`DELETE /books/{id}` -> 204，幂等归档。
+- `GET /books/{id}` 对活动书返回详情；归档书仅已有拥有者可读。归档后已有拥有者可以更新/移出书架，其他家庭不能新增该归档书；私有照片仍不在公开详情中返回。
 - `POST /book-intakes` multipart，多次 files 字段，mode 默认 batch；响应 201 `{intake: Intake}`。仅写上传/任务，不在请求中长时间等模型；独立 worker 处理 batch/realtime。
 - `GET /book-intakes` -> `{intakes: Intake[]}`；`GET /book-intakes/{uuid}` -> `{intake: Intake}`。
 - `GET /book-intakes/{uuid}/photos/{photo_uuid}` -> 已验证图片二进制，管理员及所有者校验；过期已清理则 404。
 - `PATCH /book-intakes/{uuid}/groups` JSON `{revision, groups, unassigned_photo_ids}` -> `{intake: Intake}`；photo_ids 必须属于任务且不重复，冲突 revision 返回 409 `revision_conflict`。
-- `POST /book-intakes/{uuid}/enrichment` JSON `{revision, group_ids}` -> `{intake: Intake, candidates: {group_id: CandidateResult}}`；只返回候选，用户自行选择/编辑后 PATCH，不自动填最终书目。
+- `POST /book-intakes/{uuid}/enrichment` JSON `{revision, group_ids}` -> `{intake: Intake, candidates: {group_id: CandidateResult}}`；只返回候选并保存到各组 enrichment_candidates，更新 revision；用户自行选择/编辑后 PATCH，不自动填最终书目。
 - `POST /book-intakes/{uuid}/confirm` JSON `{revision, group_ids, add_to_shelf:false}` -> `{intake: Intake, books:[{group_id, book_id, created}]}`；所选组先全部校验再事务写入，其他疑点组可排除。重复已确认请求返回保存映射，不重复写书架或书目。此后不可编辑/重新确认不同内容。
 - `POST /book-intakes/{uuid}/cancel` / `retry` JSON `{revision}` -> `{intake: Intake}`；只重提失败项，成功提取不重付费；已取消任务迟到结果不自动入库。
 
 `Intake` 包含 id/mode/status/revision/generation/groups/unassigned_photo_ids/errors/progress/confirmed_books/created_at/updated_at，以及 photos 列表，每项 id/original_name/status/error/url (鉴权图片 URL)/extraction。其错误格式保留 `{code,message}`，用语可理解，不含请求密钥、完整音频或供应商原始敏感日志。
+
+extraction 保留实际 model_name/usage；usage 的 prompt_tokens/completion_tokens/total_tokens 可缺失，缺失不是零。识别 issues 为 `{code,message,field?,photo_id?}`，联网检索 issues 为文字列表。groups 可包含 existing_book_candidates 和 enrichment_candidates；选择已有版本必须明确，不能因标题一致自动复用。合并/拆分后服务端从可信历史声明/提取结果保留照片来源；列表声明可支持最终列表的子集，但不把单个来源原值改成全部聚合值。
+
+Intake 的 `cost_estimate` 与供应商实际 tokens 分开：`{currency:'CNY',amount:decimal_string|null,priced_photos,total_photos,pricing_date,source_url,assumption:'uncached_input',mode}`。只计算已返回有效输入/输出用量且型号有核验价目的照片；所有输入按未命中缓存价计算。当前国内 Flash 实时输入/输出为 1/2 元每百万 tokens，Pro 为 3/6 元，Batch 为对应实时单价的一半，价格日期 2026-09-29；`MIMO_COST_PRICING_REGION` 非 cn 时不估算。无可估算项为 null，实际返回 0 tokens 才可显示 0；失败、重试和未返回调用可能不在覆盖项内，不能称为任务总费用或账单。
 
 worker 命令：`process_book_intakes --once` 或持续处理。queued 实时任务逐图提取；queued Batch 上传 JSONL 并保存映射；后续轮次查询结果并回填照片。全部当前照片完成后自动归组，等待用户确认。部分失败保留成功照片和草稿并允许失败项重提。自动归组不覆盖人工 revision；用户可以在未完成任务上查看进度，编辑在识别阶段结束后开放。清理命令：`cleanup_intake_media`。
 

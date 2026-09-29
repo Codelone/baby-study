@@ -6,7 +6,7 @@ from unittest.mock import patch
 from urllib.parse import parse_qs, urlparse
 
 import requests
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, override_settings
 
 from catalog.enrichment.sources import SourceError
 from catalog.intake import enrichment
@@ -75,6 +75,22 @@ class CandidateLookupTests(SimpleTestCase):
         self.get.side_effect = [
             item if isinstance(item, (Response, Exception)) else Response(item) for item in data
         ]
+
+    @override_settings(INTAKE_ENRICHMENT_PROXY_URL="http://127.0.0.1:8899")
+    def test_explicit_public_lookup_proxy_does_not_enable_environment_authentication(self):
+        client = enrichment._PublicClient()
+        self.addCleanup(client.close)
+        self.assertFalse(client.session.trust_env)
+        self.assertEqual(client.session.proxies, {"https": "http://127.0.0.1:8899"})
+        self.assertNotIn("Authorization", client.session.headers)
+
+    @override_settings(INTAKE_ENRICHMENT_PROXY_URL="http://user:secret@127.0.0.1:8899")
+    def test_invalid_proxy_configuration_is_a_safe_lookup_failure(self):
+        result = enrichment.search_candidates({"isbn": ISBN})
+        self.assertEqual(result["candidates"], [])
+        self.assertIn("代理配置无效", result["issues"][0])
+        self.assertNotIn("secret", str(result))
+        self.get.assert_not_called()
 
     def test_isbn_10_lookup_returns_version_claims_without_mutation_or_media_fetch(self):
         draft = {

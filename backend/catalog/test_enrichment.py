@@ -451,8 +451,8 @@ class SourceTests(SimpleTestCase):
 class MetadataMigrationTests(TransactionTestCase):
     def test_membership_and_import_migration_preserve_original_ids_and_shelf(self):
         old_target = [("catalog", "0003_book_series")]
-        latest = [("catalog", "0006_evidence_uniqueness")]
         executor = MigrationExecutor(connection)
+        latest = executor.loader.graph.leaf_nodes("catalog")
         executor.migrate(old_target)
         try:
             old = executor.loader.project_state(old_target).apps

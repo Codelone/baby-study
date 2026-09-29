@@ -529,7 +529,7 @@ class ManagementAPITests(TestCase):
         self.assertEqual(
             list(SeriesMembership.objects.filter(book=archived).values()), before_memberships
         )
-        self.assertEqual(self.client.get(url).status_code, 404)
+        self.assertEqual(self.client.get(url).status_code, 200)
         catalog = self.client.get(reverse("books")).json()
         self.assertNotIn(archived.pk, {book["id"] for book in catalog["books"]})
         group = self.client.get(reverse("series-detail", args=[first.pk])).json()

@@ -79,6 +79,7 @@ MEDIA_ROOT = Path(os.environ.get("INTAKE_MEDIA_ROOT", BASE_DIR / "private-media"
 INTAKE_MAX_PHOTOS = int(os.environ.get("INTAKE_MAX_PHOTOS", "30"))
 INTAKE_MAX_PHOTO_BYTES = int(os.environ.get("INTAKE_MAX_PHOTO_BYTES", str(8 * 1024 * 1024)))
 INTAKE_MEDIA_RETENTION_DAYS = int(os.environ.get("INTAKE_MEDIA_RETENTION_DAYS", "30"))
+INTAKE_ENRICHMENT_PROXY_URL = os.environ.get("INTAKE_ENRICHMENT_PROXY_URL", "")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
@@ -93,6 +94,8 @@ MIMO_BATCH_BASE_URL = os.environ.get("MIMO_BATCH_BASE_URL", "")
 MIMO_TEXT_MODEL = os.environ.get("MIMO_TEXT_MODEL", "mimo-v2.6-flash")
 MIMO_IMAGE_MODEL = os.environ.get("MIMO_IMAGE_MODEL", "mimo-v2.6-flash")
 MIMO_AUDIO_MODEL = os.environ.get("MIMO_AUDIO_MODEL", "mimo-v2.6-flash")
+# Dated domestic estimates only; blank/other regions disable monetary estimates.
+MIMO_COST_PRICING_REGION = os.environ.get("MIMO_COST_PRICING_REGION", "cn")
 MIMO_TIMEOUT_SECONDS = float(os.environ.get("MIMO_TIMEOUT_SECONDS", "60"))
 MIMO_CONNECT_TIMEOUT_SECONDS = float(os.environ.get("MIMO_CONNECT_TIMEOUT_SECONDS", "10"))
 MIMO_MAX_RETRIES = int(os.environ.get("MIMO_MAX_RETRIES", "2"))

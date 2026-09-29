@@ -2,8 +2,10 @@
 
 import hashlib
 import json
+import re
 import unicodedata
 
+from django.contrib.auth import get_user_model
 from django.db import connection, transaction
 from django.db.models import JSONField, Value
 from django.db.models.functions import Replace, Upper
@@ -54,6 +56,24 @@ def _digest(value):
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()
+
+
+def evidence_supports_value(claim, value, field=None):
+    if claim == value:
+        return True
+    if field in {"cover_url", "cover_source_url", "isbn"}:
+        return claim == value
+
+    def normalized(item):
+        if isinstance(item, str):
+            return " ".join(re.findall(r"[^\W_]+", unicodedata.normalize("NFKC", item).casefold()))
+        return item
+
+    if isinstance(claim, list) and isinstance(value, list):
+        return bool(claim) and all(
+            normalized(item) in [normalized(other) for other in value] for item in claim
+        )
+    return normalized(claim) == normalized(value)
 
 
 def _isbn_variants(isbn):
@@ -160,6 +180,7 @@ def _prepare_evidence(user, fields, explicit_fields, evidence):
     if photo_ids != set(photos):
         raise ValidationError({"evidence": "照片不存在或不属于当前管理员的录入任务"})
     covered = set()
+    covered_values = {}
     manual_fields = set()
     prepared = []
     for claim in claims:
@@ -170,15 +191,17 @@ def _prepare_evidence(user, fields, explicit_fields, evidence):
         normalized_value = BookCreateFieldsSerializer().fields[field].run_validation(claim["value"])
         if field == "isbn":
             normalized_value = BookCreateFieldsSerializer().validate_isbn(normalized_value)
-        if normalized_value != fields[field]:
+        if not evidence_supports_value(normalized_value, fields[field], field):
             raise ValidationError({"evidence": f"来源声明与确认值不一致：{field}"})
         if claim["kind"] == "manual":
             manual_fields.add(field)
         covered.add(field)
+        if isinstance(normalized_value, list):
+            covered_values.setdefault(field, []).extend(normalized_value)
         prepared.append(
             {
                 "field": field,
-                "value": fields[field],
+                "value": normalized_value,
                 "origin_kind": claim["kind"],
                 "source_url": claim["source_url"],
                 "source_label": claim["source_label"]
@@ -187,7 +210,12 @@ def _prepare_evidence(user, fields, explicit_fields, evidence):
                 "photo": photos.get(claim["photo_id"]),
             }
         )
-    for field in sorted(explicit_fields - covered):
+    partly_covered = {
+        field
+        for field, values in covered_values.items()
+        if any(not evidence_supports_value([value], values) for value in fields[field])
+    }
+    for field in sorted((explicit_fields - covered) | partly_covered):
         manual_fields.add(field)
         prepared.append(
             {
@@ -220,6 +248,7 @@ def create_book(user, fields, idempotency_key="", evidence=None, existing_book_i
     }
     with transaction.atomic():
         _lock_catalog()
+        get_user_model().objects.select_for_update().get(pk=user.pk)
         record = None
         if key:
             # Reuse the import provenance ledger to retain request/result mappings

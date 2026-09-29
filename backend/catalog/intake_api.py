@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.db import transaction
 from django.http import FileResponse
@@ -18,6 +19,7 @@ from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from catalog.intake.costs import estimate_cost
 from catalog.models import BookIntake, IntakePhoto, ShelfItem
 
 
@@ -79,6 +81,7 @@ def serialize_intake(intake):
         "progress": intake.progress,
         "confirmed_books": intake.confirmed_books,
         "photos": photos,
+        "cost_estimate": estimate_cost(photos, intake.mode),
         "created_at": intake.created_at.isoformat(),
         "updated_at": intake.updated_at.isoformat(),
     }
@@ -182,6 +185,29 @@ def normalized_groups(intake, data):
     seen_ids, seen_groups = set(), set()
     result = []
     previous = {group["id"]: group for group in intake.groups}
+    existing_photo_claims = {
+        (str(claim.get("photo_id")), claim.get("field"))
+        for group in intake.groups
+        for claim in group.get("evidence", [])
+        if claim.get("kind") == "photo"
+    }
+    photo_claims = []
+    for photo in intake.photos.all():
+        for field, value in photo.extraction.get("fields", {}).items():
+            if value in (None, "", [], "unknown"):
+                continue
+            if (str(photo.id), field) in existing_photo_claims:
+                continue
+            photo_claims.append(
+                {
+                    "field": field,
+                    "value": value,
+                    "kind": "photo",
+                    "photo_id": str(photo.id),
+                    "source_label": "照片识别",
+                    "model_name": photo.extraction.get("model_name", ""),
+                }
+            )
     allowed_fields = {
         "title",
         "original_title",
@@ -210,7 +236,11 @@ def normalized_groups(intake, data):
             raise serializers.ValidationError({"groups": "分组重复或缺少照片"})
         if not isinstance(fields, dict) or set(fields) - allowed_fields:
             raise serializers.ValidationError({"groups": "资料字段无效"})
-        if len(json.dumps(fields, ensure_ascii=False)) > 20000:
+        try:
+            field_size = len(json.dumps(fields, ensure_ascii=False, allow_nan=False))
+        except (TypeError, ValueError):
+            raise serializers.ValidationError({"groups": "资料字段格式无效"}) from None
+        if field_size > 20000:
             raise serializers.ValidationError({"groups": "资料内容过长"})
         for photo_id in photo_ids:
             if not isinstance(photo_id, str) or photo_id not in allowed_ids or photo_id in seen_ids:
@@ -218,8 +248,14 @@ def normalized_groups(intake, data):
             seen_ids.add(photo_id)
         seen_groups.add(group_id)
         old = previous.get(group_id, {})
-        claims = old.get("evidence", [])
-        candidates = old.get("enrichment_candidates", [])
+        related = [item for item in intake.groups if set(item["photo_ids"]) & set(photo_ids)]
+        claims = [claim for item in related for claim in item.get("evidence", [])]
+        claims += photo_claims
+        candidates = []
+        for item in related:
+            for candidate in item.get("enrichment_candidates", []):
+                if candidate not in candidates:
+                    candidates.append(candidate)
         web_claims = [claim for candidate in candidates for claim in candidate.get("evidence", [])]
         evidence = []
         proposed = group.get("evidence", [])
@@ -229,14 +265,14 @@ def normalized_groups(intake, data):
             matching = [
                 claim
                 for claim in claims
-                if claim.get("field") == field and claim.get("value") == value
+                if claim.get("field") == field and supports_value(claim.get("value"), value, field)
             ]
             matching += [
                 claim
                 for claim in proposed
                 if claim in web_claims
                 and claim.get("field") == field
-                and claim.get("value") == value
+                and supports_value(claim.get("value"), value, field)
             ]
             matching = [
                 claim
@@ -244,8 +280,10 @@ def normalized_groups(intake, data):
                 if claim.get("kind") != "photo" or str(claim.get("photo_id")) in photo_ids
             ]
             if matching:
-                evidence.extend(matching)
-            elif value not in (None, "", []):
+                for claim in matching:
+                    if claim not in evidence:
+                        evidence.append(claim)
+            elif value not in (None, "", []) or value != old.get("fields", {}).get(field):
                 evidence.append(
                     {"field": field, "value": value, "kind": "manual", "source_label": "管理员修正"}
                 )
@@ -262,6 +300,7 @@ def normalized_groups(intake, data):
                 "existing_book_id": existing_id,
                 "selected": bool(group.get("selected", True)),
                 "enrichment_candidates": candidates,
+                "existing_book_candidates": old.get("existing_book_candidates", []),
             }
         )
     for photo_id in unassigned:
@@ -271,6 +310,12 @@ def normalized_groups(intake, data):
     if seen_ids != allowed_ids:
         raise serializers.ValidationError({"groups": "请保留全部照片的分组或未归属记录"})
     return result, unassigned
+
+
+def supports_value(claim, value, field):
+    from catalog.services import evidence_supports_value
+
+    return evidence_supports_value(claim, value, field)
 
 
 @api_view(["PATCH"])
@@ -307,11 +352,14 @@ def intake_enrichment(request, intake_id):
     with transaction.atomic():
         current = owned_intake(request, intake_id, lock=True)
         check_revision(current, request.data)
+        if current.status not in {"awaiting_confirmation", "partial_failure", "failed"}:
+            raise IntakeStateConflict()
         updated = copy.deepcopy(current.groups)
         for group in updated:
             if group["id"] in candidates:
                 group["enrichment_candidates"] = candidates[group["id"]].get("candidates", [])
         current.groups = updated
+        current.revision += 1
         current.save()
     return Response({"intake": serialize_intake(current), "candidates": candidates})
 
@@ -319,7 +367,7 @@ def intake_enrichment(request, intake_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def intake_confirm(request, intake_id):
-    from catalog.services import create_book
+    from catalog.services import _lock_catalog, create_book
 
     ids = request.data.get("group_ids")
     add_to_shelf = request.data.get("add_to_shelf", False)
@@ -339,6 +387,9 @@ def intake_confirm(request, intake_id):
         groups = {group["id"]: group for group in intake.groups}
         if any(group_id not in groups for group_id in ids):
             raise serializers.ValidationError({"group_ids": "分组不存在"})
+        if add_to_shelf:
+            _lock_catalog()
+            get_user_model().objects.select_for_update().get(pk=request.user.pk)
         result = []
         for group_id in ids:
             group = groups[group_id]
@@ -346,7 +397,23 @@ def intake_confirm(request, intake_id):
                 request.user,
                 group["fields"],
                 idempotency_key=f"intake:{intake.id}:{group_id}",
-                evidence=group.get("evidence", []),
+                evidence=[
+                    {
+                        key: value
+                        for key, value in claim.items()
+                        if key
+                        in {
+                            "field",
+                            "value",
+                            "kind",
+                            "photo_id",
+                            "source_url",
+                            "source_label",
+                            "model_name",
+                        }
+                    }
+                    for claim in group.get("evidence", [])
+                ],
                 existing_book_id=group.get("existing_book_id"),
             )
             if add_to_shelf:
@@ -380,6 +447,7 @@ def intake_cancel(request, intake_id):
         intake.generation += 1
         intake.revision += 1
         intake.lease_expires_at = None
+        intake.lease_token = None
         intake.save()
     # The worker reconciles/cancels provider batches; a cancelled local draft never auto-saves.
     return Response({"intake": serialize_intake(intake)})
@@ -402,5 +470,6 @@ def intake_retry(request, intake_id):
         intake.generation += 1
         intake.revision += 1
         intake.status, intake.errors, intake.lease_expires_at = "queued", [], None
+        intake.lease_token = None
         intake.save()
     return Response({"intake": serialize_intake(intake)})

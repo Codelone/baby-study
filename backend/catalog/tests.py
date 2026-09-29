@@ -463,4 +463,5 @@ class SeriesMigrationTests(TransactionTestCase):
                 list(RestoredBook.objects.order_by("id").values_list(*fields)), before_books
             )
         finally:
-            MigrationExecutor(connection).migrate([("catalog", "0006_evidence_uniqueness")])
+            executor = MigrationExecutor(connection)
+            executor.migrate(executor.loader.graph.leaf_nodes("catalog"))

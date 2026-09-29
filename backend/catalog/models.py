@@ -228,6 +228,7 @@ class BookIntake(models.Model):
     confirmed_books = models.JSONField(default=list, blank=True)
     has_manual_edits = models.BooleanField(default=False)
     lease_expires_at = models.DateTimeField(null=True, blank=True)
+    lease_token = models.UUIDField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

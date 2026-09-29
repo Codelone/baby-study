@@ -5,10 +5,10 @@ import json
 from unittest.mock import call, patch
 
 import requests
-from ai.client import ModelAPIError
 from django.test import SimpleTestCase, override_settings
 
 from ai.batch import BATCH_ENDPOINT, MAX_BATCH_BYTES, BatchClient
+from ai.client import ModelAPIError
 
 BASE_URL = "https://batch-api-cn.xiaomimimo.com/v1"
 FAKE_KEY = "offline-test-key"

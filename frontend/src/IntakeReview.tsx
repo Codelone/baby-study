@@ -110,8 +110,8 @@ function UsageSummary({ intake }: { intake: Intake }) {
         {estimate && (
           <p>
             仅覆盖 {estimate.priced_photos}/{estimate.total_photos} 张照片 ·{' '}
-            {estimate.mode === 'batch' ? 'Batch' : '实时'} · 价格日期{' '}
-            {estimate.pricing_date}{' '}
+            {estimate.mode === 'batch' ? 'Batch' : '实时'} · 国内人民币 ·
+            价格日期 {estimate.pricing_date}{' '}
             {/^https:\/\//i.test(estimate.source_url) && (
               <a href={estimate.source_url} target="_blank" rel="noreferrer">
                 官方价格说明 ↗

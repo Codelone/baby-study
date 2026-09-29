@@ -51,6 +51,7 @@ export default function BookFieldsEditor({
           />
         ) : Array.isArray(value) ? (
           <textarea
+            aria-label={fieldLabels[key]}
             rows={2}
             value={value.join('\n')}
             placeholder="每行一项，未知留空"
@@ -59,6 +60,7 @@ export default function BookFieldsEditor({
           />
         ) : key === 'description' ? (
           <textarea
+            aria-label={fieldLabels[key]}
             rows={4}
             value={value || ''}
             disabled={disabled}

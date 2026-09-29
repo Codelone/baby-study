@@ -13,8 +13,9 @@ import time
 from urllib.parse import urlsplit
 
 import requests
-from ai.client import ModelAPIError
 from django.conf import settings
+
+from ai.client import ModelAPIError
 
 MAX_BATCH_BYTES = 128 * 1024 * 1024
 BATCH_ENDPOINT = "/v1/chat/completions"

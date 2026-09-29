@@ -18,7 +18,13 @@ from catalog.serializers import (
     ShelfItemSerializer,
     ShelfUpdateSerializer,
 )
-from catalog.services import archive_book, can_manage_catalog, create_book, require_catalog_manager
+from catalog.services import (
+    _lock_catalog,
+    archive_book,
+    can_manage_catalog,
+    create_book,
+    require_catalog_manager,
+)
 
 
 def book_queryset():
@@ -51,7 +57,14 @@ def book_detail(request, book_id):
     if request.method == "DELETE":
         archive_book(request.user, book_id)
         return Response(status=204)
-    book = get_object_or_404(book_queryset().prefetch_related("evidence"), pk=book_id)
+    visible = Q(catalog_status="active") | Q(
+        catalog_status="archived",
+        shelfitem__user=request.user,
+        shelfitem__ownership_status="owned",
+    )
+    book = get_object_or_404(
+        Book.objects.filter(visible).distinct().prefetch_related("groups", "evidence"), pk=book_id
+    )
     return Response(BookDetailSerializer(book, context=ownership_context(request)).data)
 
 
@@ -71,11 +84,13 @@ def books(request):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         with transaction.atomic():
+            if data["add_to_shelf"]:
+                _lock_catalog()
+                get_user_model().objects.select_for_update().get(pk=request.user.pk)
             book, created = create_book(
                 request.user, data["fields"], idempotency_key=data["idempotency_key"]
             )
             if data["add_to_shelf"]:
-                get_user_model().objects.select_for_update().get(pk=request.user.pk)
                 item, _ = ShelfItem.objects.get_or_create(
                     user=request.user,
                     book=book,
@@ -169,11 +184,16 @@ def shelf(request):
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def shelf_book(request, book_id):
-    book = get_object_or_404(book_queryset(), pk=book_id)
     serializer = ShelfUpdateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     with transaction.atomic():
         get_user_model().objects.select_for_update().get(pk=request.user.pk)
+        visible = Q(catalog_status="active") | Q(
+            catalog_status="archived",
+            shelfitem__user=request.user,
+            shelfitem__ownership_status="owned",
+        )
+        book = get_object_or_404(Book.objects.filter(visible).distinct(), pk=book_id)
         item, _created = ShelfItem.objects.update_or_create(
             user=request.user,
             book=book,

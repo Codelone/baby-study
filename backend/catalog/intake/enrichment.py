@@ -22,6 +22,7 @@ from email.utils import parsedate_to_datetime
 from urllib.parse import urlencode, urlparse
 
 import requests
+from django.conf import settings
 
 from catalog.enrichment.sources import SourceError
 
@@ -126,6 +127,18 @@ class _PublicClient:
     def __init__(self):
         self.session = requests.Session()
         self.session.trust_env = False
+        proxy = getattr(settings, "INTAKE_ENRICHMENT_PROXY_URL", "")
+        if proxy:
+            parsed = urlparse(proxy)
+            if (
+                parsed.scheme not in {"http", "https"}
+                or not parsed.hostname
+                or parsed.username
+                or parsed.password
+            ):
+                self.session.close()
+                raise SourceError("公开书目检索代理配置无效，请检查服务端配置。")
+            self.session.proxies = {"https": proxy}
         self.session.headers.update(
             {
                 "User-Agent": "BabyStudyCatalog/1.0 (public bibliographic lookup; no media)",
@@ -374,7 +387,11 @@ def search_candidates(fields: dict) -> dict:
     if not draft["isbn"] and not draft["title"]:
         result["issues"].append("缺少有效 ISBN 或书名，公开来源不足；请补拍版权页或手工补充。")
         return result
-    client = _PublicClient()
+    try:
+        client = _PublicClient()
+    except SourceError as exc:
+        result["issues"].append(str(exc))
+        return result
     try:
         if draft["isbn"]:
             try:
