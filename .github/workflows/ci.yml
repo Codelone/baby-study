@@ -37,6 +37,7 @@ jobs:
       - run: ruff check backend
       - run: ruff format --check backend
       - run: python backend/manage.py check
+      - run: python -m unittest discover -s deployment/family -p 'test_*.py'
       - run: python manage.py test
         working-directory: backend
 
@@ -55,5 +56,6 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run format:check
+      - run: npm run test:requests
       - run: npm run typecheck
       - run: npm run build

@@ -22,6 +22,8 @@ function detailMessage(details: unknown): string | null {
 export class RequestError extends Error {
   code?: string
   details?: unknown
+  status?: number
+  requestId?: string | null
 
   constructor(message: string, code?: string, details?: unknown) {
     super(message)
@@ -38,26 +40,72 @@ export function csrfToken(): string {
   return token ? decodeURIComponent(token) : ''
 }
 
-export async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch('/baby/study' + path, {
-    credentials: 'same-origin',
-    ...init,
-  })
-  if (response.status === 204) return undefined as T
-  let body: T & ApiError
+type RequestOptions = RequestInit & { timeoutMs?: number }
+
+export async function request<T>(
+  path: string,
+  init?: RequestOptions,
+): Promise<T> {
+  const { timeoutMs = 30000, signal, ...options } = init ?? {}
+  const controller = new AbortController()
+  let timedOut = false
+  const cancel = () => controller.abort(signal?.reason)
+  signal?.addEventListener('abort', cancel, { once: true })
+  if (signal?.aborted) cancel()
+  const timer = window.setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, timeoutMs)
   try {
-    body = (await response.json()) as T & ApiError
-  } catch {
-    throw new RequestError('服务暂时不可用，请稍后重试。', 'invalid_response')
-  }
-  if (!response.ok) {
+    const response = await fetch('/baby/study' + path, {
+      credentials: 'same-origin',
+      ...options,
+      signal: controller.signal,
+    })
+    if (response.status === 204) return undefined as T
+    let body: T & ApiError
+    try {
+      body = (await response.json()) as T & ApiError
+      if (!body || typeof body !== 'object') throw new Error('invalid body')
+    } catch (cause) {
+      if (controller.signal.aborted) throw cause
+      const failure = new RequestError(
+        response.status >= 500
+          ? '服务或访问通道暂时不可用，请稍后重试。'
+          : '服务返回内容无效，请稍后重试。',
+        response.status >= 500 ? 'service_unavailable' : 'invalid_response',
+      )
+      failure.status = response.status
+      failure.requestId = response.headers.get('X-Request-ID')
+      throw failure
+    }
+    if (!response.ok) {
+      const failure = new RequestError(
+        detailMessage(body.error?.details) || body.error?.message || '请求失败',
+        body.error?.code,
+        body.error?.details,
+      )
+      failure.status = response.status
+      failure.requestId = response.headers.get('X-Request-ID')
+      throw failure
+    }
+    return body
+  } catch (cause) {
+    if (signal?.aborted) throw cause
+    if (timedOut)
+      throw new RequestError(
+        '请求超时，请检查网络和录入任务后重试。',
+        'request_timeout',
+      )
+    if (cause instanceof RequestError) throw cause
     throw new RequestError(
-      detailMessage(body.error?.details) || body.error?.message || '请求失败',
-      body.error?.code,
-      body.error?.details,
+      '网络连接中断或服务不可达，请检查网络和当前访问地址。',
+      'network_error',
     )
+  } finally {
+    window.clearTimeout(timer)
+    signal?.removeEventListener('abort', cancel)
   }
-  return body
 }
 
 export function jsonRequest<T>(

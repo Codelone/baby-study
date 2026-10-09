@@ -145,6 +145,8 @@ export type Intake = {
   id: string
   mode: 'batch' | 'realtime'
   status: IntakeStatus
+  processing_stage?: string
+  batch_status?: string | null
   revision: number
   generation: number
   groups: IntakeGroup[]

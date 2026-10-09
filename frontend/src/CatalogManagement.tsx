@@ -51,8 +51,9 @@ export default function CatalogManagement({
   const [reviewDirty, setReviewDirty] = useState(false)
   const [addToShelf, setAddToShelf] = useState(false)
   const idempotency = useRef(crypto.randomUUID())
+  const uploadKey = useRef(crypto.randomUUID())
   const [files, setFiles] = useState<File[]>([])
-  const [mode, setMode] = useState<'batch' | 'realtime'>('batch')
+  const [mode, setMode] = useState<'batch' | 'realtime'>('realtime')
   const [tasks, setTasks] = useState<Intake[]>([])
   const [tasksLoaded, setTasksLoaded] = useState(false)
   const [selectedId, setSelectedId] = useState(initialTaskId)
@@ -70,6 +71,10 @@ export default function CatalogManagement({
     mode === 'batch'
       ? capabilities.batch_configured
       : capabilities.realtime_configured
+
+  useEffect(() => {
+    uploadKey.current = crypto.randomUUID()
+  }, [targetSeries?.id])
 
   useEffect(() => {
     if (!busy && manualCompleted.current) {
@@ -190,6 +195,7 @@ export default function CatalogManagement({
   }
   function addFiles(incoming: FileList | null) {
     if (!incoming) return
+    uploadKey.current = crypto.randomUUID()
     const accepted: File[] = []
     const issues: string[] = []
     for (const file of Array.from(incoming)) {
@@ -276,19 +282,37 @@ export default function CatalogManagement({
       const body = new FormData()
       files.forEach((file) => body.append('files', file))
       body.append('mode', mode)
+      body.append('idempotency_key', uploadKey.current)
       if (targetSeries) body.append('target_series_id', String(targetSeries.id))
       const result = await request<{ intake: Intake }>('/book-intakes', {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken() },
         body,
+        timeoutMs: 120000,
       })
       setFiles([])
+      uploadKey.current = crypto.randomUUID()
       updateTask(result.intake)
       selectTask(result.intake.id)
       setListVersion((value) => value + 1)
       setNotice('照片已上传，任务已保存。识别后请核对分组并统一确认入库。')
     } catch (cause) {
       showFailure(cause)
+      if (
+        cause instanceof RequestError &&
+        [
+          'network_error',
+          'request_timeout',
+          'service_unavailable',
+          'invalid_response',
+        ].includes(cause.code ?? '')
+      ) {
+        setError(
+          cause.message +
+            ' 照片仍保留；任务可能已创建，请先查看录入任务，再重试同一次上传。',
+        )
+        setListVersion((value) => value + 1)
+      }
     } finally {
       setBusy('')
     }
@@ -311,7 +335,7 @@ export default function CatalogManagement({
       <div className="management-tabs" role="group" aria-label="图书录入方式">
         {(
           [
-            ['photos', '拍照 / 上传'],
+            ['photos', '上传图片'],
             ['manual', '手工新增'],
             ['tasks', '录入任务'],
           ] as const
@@ -399,20 +423,7 @@ export default function CatalogManagement({
           </p>
           <div className="photo-upload-controls">
             <label className="file-picker">
-              <span>手机拍照</span>
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                capture="environment"
-                disabled={!!busy}
-                onChange={(event) => {
-                  addFiles(event.target.files)
-                  event.target.value = ''
-                }}
-              />
-            </label>
-            <label className="file-picker">
-              <span>选择照片（可多选）</span>
+              <span>上传图片（可多选）</span>
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
@@ -447,11 +458,12 @@ export default function CatalogManagement({
                       className="remove-button"
                       type="button"
                       disabled={!!busy}
-                      onClick={() =>
+                      onClick={() => {
+                        uploadKey.current = crypto.randomUUID()
                         setFiles((previous) =>
                           previous.filter((_, position) => position !== index),
                         )
-                      }
+                      }}
                       aria-label={'移除待上传照片 ' + file.name}
                     >
                       移除
@@ -469,10 +481,13 @@ export default function CatalogManagement({
                 name="intake-mode"
                 value="batch"
                 checked={mode === 'batch'}
-                onChange={() => setMode('batch')}
+                onChange={() => {
+                  uploadKey.current = crypto.randomUUID()
+                  setMode('batch')
+                }}
               />
               <span>
-                省钱 Batch（默认） · 可以等待，完成时间取决于调度
+                省钱 Batch · 可以等待，完成时间取决于供应商调度
                 {!capabilities.batch_configured ? ' · 尚未配置' : ''}
               </span>
             </label>
@@ -482,10 +497,13 @@ export default function CatalogManagement({
                 name="intake-mode"
                 value="realtime"
                 checked={mode === 'realtime'}
-                onChange={() => setMode('realtime')}
+                onChange={() => {
+                  uploadKey.current = crypto.randomUUID()
+                  setMode('realtime')
+                }}
               />
               <span>
-                实时识别 · 更快开始处理
+                实时识别（默认） · 更快开始处理
                 {!capabilities.realtime_configured ? ' · 尚未配置' : ''}
               </span>
             </label>

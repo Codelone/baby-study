@@ -1,6 +1,7 @@
 import base64
 import copy
 import json
+import time
 import uuid
 from datetime import timedelta
 
@@ -9,6 +10,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from catalog.models import Book, BookIntake, IntakeBatch, IntakePhoto
+from config.observability import event, log_context
 
 TERMINAL_BATCH = {"completed", "failed", "expired", "cancelled"}
 
@@ -53,10 +55,18 @@ def claim_next():
                 intake.lease_expires_at = None
                 intake.save()
                 return None
+        queued_at = intake.updated_at
         intake.status = "processing"
         intake.lease_expires_at = now + timedelta(minutes=5)
         intake.lease_token = uuid.uuid4()
         intake.save()
+        event(
+            "intake_claimed",
+            intake_id=intake.id,
+            generation=intake.generation,
+            mode=intake.mode,
+            queue_ms=round((now - queued_at).total_seconds() * 1000, 2),
+        )
         return intake
 
 
@@ -86,6 +96,15 @@ def save_photo_result(
         photo.error = problem or {}
         photo.extraction = extraction or {}
         photo.save()
+        event(
+            "photo_result_saved",
+            intake_id=intake.id,
+            generation=generation,
+            photo_id=photo.id,
+            mode=intake.mode,
+            status=photo.status,
+            error_code=problem.get("code") if problem else None,
+        )
         counts = list(intake.photos.values_list("status", flat=True))
         intake.progress = {
             "total": len(counts),
@@ -97,6 +116,7 @@ def save_photo_result(
 
 
 def finish(intake_id, generation, lease_token=None):
+    started = time.perf_counter()
     from catalog.intake.grouping import group_photos
 
     with transaction.atomic():
@@ -150,6 +170,14 @@ def finish(intake_id, generation, lease_token=None):
         intake.lease_expires_at = None
         intake.lease_token = None
         intake.save()
+        event(
+            "intake_finished",
+            intake_id=intake.id,
+            generation=generation,
+            mode=intake.mode,
+            status=intake.status,
+            elapsed_ms=round((time.perf_counter() - started) * 1000, 2),
+        )
         return True
 
 
@@ -187,9 +215,17 @@ def process_realtime(intake):
             photo.status = "processing"
             photo.save(update_fields=["status"])
         try:
-            response = client.chat(
-                recognition_messages(photo_data_url(photo)), capability="image", json_output=True
-            )
+            with log_context(
+                intake_id=intake.id,
+                generation=intake.generation,
+                photo_id=photo.id,
+                mode="realtime",
+            ):
+                response = client.chat(
+                    recognition_messages(photo_data_url(photo)),
+                    capability="image",
+                    json_output=True,
+                )
             extracted = parse_response(response)
             save_photo_result(
                 intake.id,
@@ -273,6 +309,14 @@ def process_batch_submission(intake):
         current.photos.filter(id__in=[row["photo_id"] for row in mapping]).update(
             status="processing"
         )
+    started = time.perf_counter()
+    event(
+        "batch_submission_started",
+        intake_id=intake.id,
+        generation=intake.generation,
+        mode="batch",
+        count=len(requests),
+    )
     try:
         response = provider.submit(requests, name=f"book-intake-{intake.id}")
         batch_id = response.get("id")
@@ -309,6 +353,17 @@ def process_batch_submission(intake):
             )
         finish(intake.id, intake.generation, intake.lease_token)
 
+    finally:
+        event(
+            "batch_submission_finished",
+            intake_id=intake.id,
+            generation=intake.generation,
+            mode="batch",
+            batch_status=job.status,
+            elapsed_ms=round((time.perf_counter() - started) * 1000, 2),
+            error_code=job.errors[0].get("code") if job.errors else None,
+        )
+
 
 def claim_poll(job):
     with transaction.atomic():
@@ -330,6 +385,7 @@ def poll_job(job):
     claimed_token = claim_poll(job)
     if not claimed_token:
         return
+    started = time.perf_counter()
     try:
         provider = BatchClient.from_settings()
         current = BookIntake.objects.get(pk=job.intake_id)
@@ -408,20 +464,33 @@ def poll_job(job):
             job.status = "retrieving_results"
         job.save()
     finally:
+        event(
+            "batch_polled",
+            intake_id=job.intake_id,
+            generation=job.generation,
+            mode="batch",
+            batch_status=job.status,
+            elapsed_ms=round((time.perf_counter() - started) * 1000, 2),
+            error_code=job.errors[0].get("code") if job.errors else None,
+        )
         BookIntake.objects.filter(pk=job.intake_id, lease_token=claimed_token).update(
             lease_expires_at=None, lease_token=None
         )
 
 
-def run_once():
+def run_once(*, poll_batches=True):
     from ai.client import ModelAPIError
 
     counts = {"submitted_or_processed": 0, "polled": 0}
-    for job in IntakeBatch.objects.exclude(
-        status__in=TERMINAL_BATCH | {"submission_unknown", "submitting"}
-    ).exclude(provider_batch_id="")[:100]:
-        poll_job(job)
-        counts["polled"] += 1
+    jobs = (
+        list(
+            IntakeBatch.objects.exclude(
+                status__in=TERMINAL_BATCH | {"submission_unknown", "submitting"}
+            ).exclude(provider_batch_id="")[:100]
+        )
+        if poll_batches
+        else []
+    )
     for _ in range(20):
         intake = claim_next()
         if not intake:
@@ -446,4 +515,7 @@ def run_once():
                 )
             finish(intake.id, intake.generation, intake.lease_token)
         counts["submitted_or_processed"] += 1
+    for job in jobs:
+        poll_job(job)
+        counts["polled"] += 1
     return copy.copy(counts)

@@ -3,12 +3,14 @@ import hashlib
 import io
 import json
 import re
+import time
+import uuid
 from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -22,6 +24,7 @@ from rest_framework.response import Response
 from catalog.intake.costs import estimate_cost
 from catalog.models import BookIntake, BookSeries, IntakePhoto, ShelfItem
 from catalog.series_services import validate_series_ids
+from config.observability import event
 
 
 class RevisionConflict(APIException):
@@ -34,6 +37,12 @@ class IntakeStateConflict(APIException):
     status_code = 409
     default_code = "intake_state_conflict"
     default_detail = "任务当前状态不支持此操作"
+
+
+class SubmissionConflict(APIException):
+    status_code = 409
+    default_code = "submission_conflict"
+    default_detail = "提交标识已用于其他照片或识别选项，请重新提交"
 
 
 def require_admin(request):
@@ -70,10 +79,30 @@ def serialize_intake(intake):
                 ),
             }
         )
+    batch = (
+        max(
+            (job for job in intake.batches.all() if job.generation == intake.generation),
+            key=lambda job: job.created_at,
+            default=None,
+        )
+        if intake.mode == "batch"
+        else None
+    )
+    stage = intake.status
+    if stage == "processing":
+        stage = (
+            "realtime_recognition"
+            if intake.mode == "realtime"
+            else "supplier_waiting"
+            if batch and batch.provider_batch_id
+            else "batch_submission"
+        )
     return {
         "id": str(intake.id),
         "mode": intake.mode,
         "status": intake.status,
+        "processing_stage": stage,
+        "batch_status": batch.status if batch else None,
         "revision": intake.revision,
         "generation": intake.generation,
         "groups": intake.groups,
@@ -121,7 +150,7 @@ def book_intakes(request):
         intakes = (
             BookIntake.objects.select_related("target_series")
             .filter(user=request.user)
-            .prefetch_related("photos")[:100]
+            .prefetch_related("photos", "batches")[:100]
         )
         return Response({"intakes": [serialize_intake(intake) for intake in intakes]})
     target_id = request.data.get("target_series_id")
@@ -130,7 +159,7 @@ def book_intakes(request):
         if isinstance(target_id, bool) or not re.fullmatch(r"[1-9][0-9]*", str(target_id)):
             raise serializers.ValidationError({"target_series_id": "请选择有效系列"})
         target = get_object_or_404(BookSeries, pk=int(target_id))
-    mode = request.data.get("mode", "batch")
+    mode = request.data.get("mode", "realtime")
     if mode not in {"batch", "realtime"}:
         raise serializers.ValidationError({"mode": "请选择省钱批量或实时模式"})
     uploads = request.FILES.getlist("files")
@@ -139,7 +168,14 @@ def book_intakes(request):
             {"files": f"请上传 1 至 {settings.INTAKE_MAX_PHOTOS} 张照片"}
         )
     prepared = []
+    key = request.data.get("idempotency_key")
+    if key is not None:
+        try:
+            key = uuid.UUID(str(key))
+        except (ValueError, TypeError, AttributeError):
+            raise serializers.ValidationError({"idempotency_key": "提交标识必须是 UUID"}) from None
     seen = set()
+    started = time.perf_counter()
     for upload in uploads:
         raw = normalized_photo(upload)
         digest = hashlib.sha256(raw).hexdigest()
@@ -147,6 +183,40 @@ def book_intakes(request):
             seen.add(digest)
             name = re.sub(r"[\x00-\x1f\x7f]", "", Path(upload.name).name)[:255]
             prepared.append((raw, digest, name))
+    event(
+        "photos_normalized",
+        request_id=getattr(request, "request_id", None),
+        count=len(prepared),
+        elapsed_ms=round((time.perf_counter() - started) * 1000, 2),
+    )
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            {
+                "photos": sorted(seen),
+                "mode": mode,
+                "target_series_id": target.pk if target else None,
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+
+    def replay():
+        previous = BookIntake.objects.get(user=request.user, idempotency_key=key)
+        if previous.submission_fingerprint != fingerprint:
+            raise SubmissionConflict()
+        event(
+            "intake_replayed",
+            request_id=getattr(request, "request_id", None),
+            intake_id=previous.id,
+            mode=mode,
+        )
+        return Response({"intake": serialize_intake(previous)}, status=200)
+
+    if (
+        key is not None
+        and BookIntake.objects.filter(user=request.user, idempotency_key=key).exists()
+    ):
+        return replay()
     saved_files = []
     try:
         with transaction.atomic():
@@ -154,6 +224,8 @@ def book_intakes(request):
                 user=request.user,
                 target_series=target,
                 mode=mode,
+                idempotency_key=key,
+                submission_fingerprint=fingerprint,
                 progress={"total": len(prepared), "completed": 0, "failed": 0},
             )
             for raw, digest, name in prepared:
@@ -161,10 +233,26 @@ def book_intakes(request):
                 photo.file.save("photo.jpg", ContentFile(raw), save=False)
                 saved_files.append(photo.file)
                 photo.save()
+    except IntegrityError:
+        for field_file in saved_files:
+            field_file.delete(save=False)
+        if (
+            key is not None
+            and BookIntake.objects.filter(user=request.user, idempotency_key=key).exists()
+        ):
+            return replay()
+        raise
     except Exception:
         for field_file in saved_files:
             field_file.delete(save=False)
         raise
+    event(
+        "intake_created",
+        request_id=getattr(request, "request_id", None),
+        intake_id=intake.id,
+        mode=mode,
+        count=len(prepared),
+    )
     return Response({"intake": serialize_intake(intake)}, status=201)
 
 

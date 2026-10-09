@@ -33,7 +33,15 @@ deployment/family/start.sh
 - 本次域名自动精确配置进 `ALLOWED_HOSTS` 和 `CSRF_TRUSTED_ORIGINS`。试用设置不会修改本地开发的 DEBUG、Cookie 或域名配置。
 - 临时域名只使用 1 小时 HSTS，不声明子域策略或预加载。试用设置只排除对应的 `security.W005/W021` 提醒，其余部署安全警告会阻止启动。
 
-保持启动终端运行、电脑开机联网。可在另一个终端查看状态：
+保持启动终端运行、电脑开机联网。如需在后台持续运行（启动输出只含准备状态和路径；实际运行日志按组件轮转）：
+
+```sh
+mkdir -p deployment/family/.runtime
+chmod 700 deployment/family/.runtime
+nohup deployment/family/start.sh > deployment/family/.runtime/launcher.log 2>&1 < /dev/null &
+```
+
+使用 `status` 检查启动结果、控制入口、组件存活及本地/隧道状态，不要凭历史 PID 判断运行。可在另一个终端查看状态：
 
 ```sh
 .venv/bin/python deployment/family/family.py status
@@ -69,7 +77,31 @@ deployment/family/stop.sh
 
 ## 日志、备份与恢复
 
-每次启动的日志位于 `deployment/family/.runtime/logs/<时间>/`，包括备份、迁移、账户、构建、隧道、网关、Web 和 worker。启动失败时终端会指出对应日志，自动清理本次进程。
+运行采用 IPv4 和 HTTP/2 隧道，避免已观察到的 IPv6/UDP 路由故障；这不保证大陆网络速度。持续 `Tunnel not found` 30 秒会关闭本次组件并保留 failed 原因，重新启动后使用新地址。worker 每5秒接收新任务，每60秒查询Batch，新任务优先。
+
+每次启动的日志位于 `deployment/family/.runtime/logs/<时间>/`，包括备份、迁移、账户、构建、隧道、网关、Web 和 worker。组件日志由监督器单写者按10 MiB轮转，最多保留5份历史文件；启动时清理30天前已结束运行的日志目录，数据库备份不参与日志清理。启动失败时终端会指出对应日志，自动清理本次进程。
+
+查看当前或最近一次运行的日志（停止后仍可查）：
+
+```sh
+.venv/bin/python deployment/family/family.py logs --component tunnel --lines 100
+.venv/bin/python deployment/family/family.py logs --component web --follow
+.venv/bin/python deployment/family/family.py logs --component worker --follow
+.venv/bin/python deployment/family/family.py logs --component gateway --lines 100
+```
+
+- `tunnel`：查IPv6/连接中断/`Tunnel not found`；`status` 的 tunnel 为connected/disconnected/not_found，组件存活不代表隧道可达。
+- `gateway`：JSON访问日志，含status、duration与request_id；请求头、响应头不写入日志。
+- `web`：`http_request` 含时间、方法、路径、状态、elapsed_ms与request_id；`photos_normalized` 记录图片处理耗时，`intake_created/intake_replayed` 把请求关联到任务。
+- `worker`：按任务URL里的intake_id搜索；`intake_claimed` 的queue_ms是排队时间，`model_attempt_started/model_attempt` 是逐图调用及尝试次数，`photo_result_saved/intake_finished` 是保存和分组。`batch_polled` 显示供应商状态和错误码，worker_cycle每5秒记录心跳。
+
+按任务查日志（将任务编号替换为实际UUID）：
+
+```sh
+rg '实际任务UUID' deployment/family/.runtime/logs/当前运行目录/worker.log*
+```
+
+上传超时或断网可能发生在服务器已保存之后。页面保留照片，同次提交重试沿用幂等键，先查看录入任务，同一次上传重试不会重复创建任务或再次触发识别；模型内部失败重试的用量仍以账单为准；改图片、模式或来源系列才生成新键。默认实时，Batch需主动选择，供应商等待不会自动转实时。日志不含密钥、Cookie或照片内容；包含真实任务编号和访问路径，仍请只在可信位置保存。
 
 每次迁移前生成 `deployment/family/.runtime/backups/<时间>.dump`，目录权限为 0700；含真实数据，不要上传或提交。核对备份可读取：
 

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "config.observability.RequestTimingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -102,3 +103,11 @@ MIMO_MAX_RETRIES = int(os.environ.get("MIMO_MAX_RETRIES", "2"))
 MIMO_RETRY_BACKOFF_SECONDS = float(os.environ.get("MIMO_RETRY_BACKOFF_SECONDS", "1"))
 MIMO_RETRY_MAX_DELAY_SECONDS = float(os.environ.get("MIMO_RETRY_MAX_DELAY_SECONDS", "30"))
 MIMO_MAX_COMPLETION_TOKENS = int(os.environ.get("MIMO_MAX_COMPLETION_TOKENS", "4096"))
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"diagnostics": {"()": "config.observability.JsonFormatter"}},
+    "handlers": {"diagnostics": {"class": "logging.StreamHandler", "formatter": "diagnostics"}},
+    "loggers": {"baby_study": {"handlers": ["diagnostics"], "level": "INFO", "propagate": False}},
+}

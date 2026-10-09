@@ -3,6 +3,7 @@
 import argparse
 import fcntl
 import json
+import logging
 import os
 import re
 import secrets
@@ -11,10 +12,12 @@ import signal
 import socket
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -26,8 +29,60 @@ PYTHON = ROOT / ".venv/bin/python"
 TUNNEL_URL = re.compile(r"https://[a-z0-9]+(?:-[a-z0-9]+)*\.trycloudflare\.com\b")
 
 
+def snapshot():
+    state = RUNTIME / "state.json"
+    data = json.loads(state.read_text()) if state.exists() else {"phase": "not_started"}
+    data["control_alive"] = False
+    try:
+        with socket.socket(socket.AF_UNIX) as client:
+            client.settimeout(3)
+            client.connect(str(CONTROL))
+            client.sendall(b"status\n")
+            payload = bytearray()
+            while chunk := client.recv(65536):
+                payload.extend(chunk)
+            data = json.loads(payload)
+            data["control_alive"] = True
+    except (OSError, ValueError):
+        if data.get("phase") in {"running", "degraded", "connecting", "preparing"}:
+            data["phase"] = "unreachable"
+    return data
+
+
+def show_logs(component, follow, lines):
+    state = RUNTIME / "state.json"
+    if not state.exists():
+        raise TrialError("尚无日志，请先启动家庭试用")
+    directory = Path(json.loads(state.read_text())["logs"])
+    paths = (
+        sorted(directory.glob("*.log"))
+        if component == "all"
+        else [directory / f"{component}.log"]
+    )
+    paths = [p for p in paths if p.exists()]
+    if not paths:
+        raise TrialError("所选组件暂无日志")
+    subprocess.run(
+        ["tail", "-n", str(lines), *(["-F"] if follow else []), *map(str, paths)],
+        check=False,
+    )
+
+
 class TrialError(Exception):
     pass
+
+
+def ensure_loopback_ports_free(ports):
+    for port in ports:
+        with socket.socket() as probe:
+            # A recently stopped gateway may leave TIME_WAIT sockets, not a live service.
+            probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                probe.bind(("127.0.0.1", port))
+            except OSError:
+                raise TrialError(
+                    f"127.0.0.1:{port} 已被占用；不会停止占用进程"
+                ) from None
 
 
 def load_environment():
@@ -115,6 +170,12 @@ class Supervisor:
         self.control = None
         self.lock = None
         self.url = None
+        self.phase = "preparing"
+        self.failure = None
+        self.health = {"local": None, "tunnel": "connecting"}
+        self.last_health = 0
+        self.tunnel_missing_since = None
+        self.collectors = []
         now = datetime.now(timezone.utc).astimezone()
         self.started = now.isoformat(timespec="seconds")
         self.logs = RUNTIME / "logs" / now.strftime("%Y%m%d-%H%M%S-%f")
@@ -130,6 +191,17 @@ class Supervisor:
             self.lock = None
             raise TrialError("家庭试用已经运行，请先执行 stop.sh") from None
         self.logs.mkdir(parents=True, mode=0o700)
+        # The exclusive lock proves no previous runtime is still managed here.
+        cutoff = time.time() - 30 * 86400
+        for directory in self.logs.parent.iterdir():
+            if (
+                directory != self.logs
+                and directory.is_dir()
+                and not directory.is_symlink()
+                and directory.stat().st_mtime < cutoff
+            ):
+                shutil.rmtree(directory)
+        self.env["FAMILY_TRIAL_LOGS"] = str(self.logs)
         CONTROL.unlink(missing_ok=True)
         (RUNTIME / "public-url.txt").unlink(missing_ok=True)
         self.control = socket.socket(socket.AF_UNIX)
@@ -140,15 +212,73 @@ class Supervisor:
         self.state("preparing")
 
     def state(self, phase):
+        self.phase = phase
+        data = self.live_state()
+        temporary = RUNTIME / "state.tmp"
+        temporary.write_text(json.dumps(data, indent=2) + "\n")
+        temporary.replace(RUNTIME / "state.json")
+
+    def live_state(self):
         data = {
-            "phase": phase,
+            "phase": self.phase,
             "pid": os.getpid(),
             "started": self.started,
             "url": self.url,
             "logs": str(self.logs),
             "children": {name: child.pid for name, child in self.children.items()},
+            "components_alive": {
+                name: child.poll() is None for name, child in self.children.items()
+            },
+            "health": self.health,
+            "error": self.failure,
         }
-        (RUNTIME / "state.json").write_text(json.dumps(data, indent=2) + "\n")
+        return data
+
+    def collect_log(self, name, stream):
+        handler = RotatingFileHandler(
+            self.logs / f"{name}.log",
+            maxBytes=10 * 1024 * 1024,
+            backupCount=5,
+            encoding="utf-8",
+        )
+        try:
+            while raw := stream.readline(65536):
+                line = raw.decode("utf-8", errors="replace").rstrip("\n")
+                handler.emit(
+                    logging.LogRecord(name, logging.INFO, "", 0, line, (), None)
+                )
+                if name == "tunnel":
+                    if "Registered tunnel connection" in line:
+                        self.health["tunnel"] = "connected"
+                        self.tunnel_missing_since = None
+                    elif "Tunnel not found" in line:
+                        self.health["tunnel"] = "not_found"
+                        if self.tunnel_missing_since is None:
+                            self.tunnel_missing_since = time.monotonic()
+                    elif (
+                        "Serve tunnel error" in line
+                        or "Failed to dial" in line
+                        or "Connection terminated" in line
+                    ):
+                        self.health["tunnel"] = "disconnected"
+        finally:
+            stream.close()
+            handler.close()
+
+    def check_health(self):
+        if not self.url:
+            return False
+        request = urllib.request.Request(
+            "http://127.0.0.1:8080/baby/study/health",
+            headers={"Host": urlparse(self.url).hostname},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=2) as response:
+                healthy = json.load(response) == {"status": "ok"}
+        except (OSError, ValueError):
+            healthy = False
+        self.health["local"] = healthy
+        return healthy
 
     def tick(self):
         try:
@@ -159,9 +289,20 @@ class Supervisor:
             with client:
                 client.settimeout(1)
                 try:
-                    if client.recv(32).strip() == b"stop":
+                    action = client.recv(32).strip()
+                    if action == b"stop":
                         self.stopping = True
                         client.sendall(b"stopping\n")
+                    elif action == b"status":
+                        self.check_health()
+                        if self.phase in {"running", "degraded"}:
+                            self.state(
+                                "running"
+                                if self.health["local"]
+                                and self.health["tunnel"] == "connected"
+                                else "degraded"
+                            )
+                        client.sendall(json.dumps(self.live_state()).encode())
                 except OSError:
                     pass
         if self.stopping:
@@ -171,20 +312,43 @@ class Supervisor:
                 raise TrialError(
                     f"{name} 意外退出；请检查 {self.logs / (name + '.log')}"
                 )
+        if (
+            self.tunnel_missing_since is not None
+            and time.monotonic() - self.tunnel_missing_since >= 30
+        ):
+            raise TrialError(
+                "Cloudflare Tunnel not found 持续30秒；请重新启动获取新访问地址"
+            )
+        if (
+            self.phase in {"running", "degraded"}
+            and time.monotonic() - self.last_health >= 10
+        ):
+            self.last_health = time.monotonic()
+            self.check_health()
+            self.state(
+                "running"
+                if self.health["local"] and self.health["tunnel"] == "connected"
+                else "degraded"
+            )
 
     def spawn(self, name, command, *, output=None):
-        log = (self.logs / f"{name}.log").open("wb")
-        self.log_handles.append(log)
         child = subprocess.Popen(
             [str(part) for part in command],
             cwd=ROOT,
             env=self.env,
             stdin=subprocess.DEVNULL,
-            stdout=output if output is not None else log,
-            stderr=log,
+            stdout=output if output is not None else subprocess.PIPE,
+            stderr=subprocess.PIPE if output is not None else subprocess.STDOUT,
             start_new_session=True,
         )
         self.children[name] = child
+        thread = threading.Thread(
+            target=self.collect_log,
+            args=(name, child.stderr if output is not None else child.stdout),
+            daemon=True,
+        )
+        self.collectors.append(thread)
+        thread.start()
         return child
 
     def run(self, name, command, *, output=None):
@@ -208,14 +372,7 @@ class Supervisor:
                 raise TrialError(
                     f"缺少 {program}，安装方法见 deployment/family/README.md"
                 )
-        for port in (8000, 8080):
-            with socket.socket() as probe:
-                try:
-                    probe.bind(("127.0.0.1", port))
-                except OSError:
-                    raise TrialError(
-                        f"127.0.0.1:{port} 已被占用；不会停止占用进程"
-                    ) from None
+        ensure_loopback_ports_free((8000, 8080))
         database = urlparse(self.env.get("DATABASE_URL", ""))
         if (
             database.hostname not in {"localhost", "127.0.0.1"}
@@ -274,6 +431,10 @@ class Supervisor:
                 "--config",
                 config,
                 "--no-autoupdate",
+                "--edge-ip-version",
+                "4",
+                "--protocol",
+                "http2",
                 "--url",
                 "http://127.0.0.1:8080",
             ],
@@ -339,6 +500,8 @@ class Supervisor:
                 "-",
                 "--error-logfile",
                 "-",
+                "--access-logformat",
+                "path=%(U)s status=%(s)s elapsed_s=%(L)s request_id=%({x-request-id}o)s",
             ],
         )
         self.spawn(
@@ -360,9 +523,23 @@ class Supervisor:
             time.sleep(0.2)
         else:
             raise TrialError("本机服务未在 30 秒内通过健康检查")
+        deadline = time.monotonic() + 90
+        while self.health["tunnel"] != "connected" and time.monotonic() < deadline:
+            self.tick()
+            time.sleep(0.2)
+        if self.health["tunnel"] != "connected":
+            raise TrialError("隧道未在90秒内建立连接，请检查 tunnel 日志后重试")
         self.spawn(
             "worker",
-            [PYTHON, "backend/manage.py", "process_book_intakes", "--interval", "60"],
+            [
+                PYTHON,
+                "backend/manage.py",
+                "process_book_intakes",
+                "--interval",
+                "5",
+                "--batch-interval",
+                "60",
+            ],
         )
         (RUNTIME / "public-url.txt").write_text(self.url + "\n")
         self.state("running")
@@ -398,11 +575,13 @@ class Supervisor:
                 child.wait()
         for log in self.log_handles:
             log.close()
+        for thread in self.collectors:
+            thread.join(timeout=2)
         if self.control is not None:
             self.control.close()
             CONTROL.unlink(missing_ok=True)
             (RUNTIME / "public-url.txt").unlink(missing_ok=True)
-            self.state("stopped")
+            self.state("failed" if self.failure else "stopped")
         if self.lock is not None:
             self.lock.close()
 
@@ -410,15 +589,23 @@ class Supervisor:
 def main():
     os.umask(0o077)
     parser = argparse.ArgumentParser(description="本机家庭试用启动/停止")
-    parser.add_argument("action", choices=["start", "stop", "status"])
+    parser.add_argument("action", choices=["start", "stop", "status", "logs"])
+    parser.add_argument(
+        "--component",
+        choices=["all", "web", "worker", "tunnel", "gateway"],
+        default="all",
+    )
+    parser.add_argument("--follow", action="store_true")
+    parser.add_argument("--lines", type=int, default=100)
     args = parser.parse_args()
     supervisor = None
     try:
         if args.action == "stop":
             stop()
         elif args.action == "status":
-            state = RUNTIME / "state.json"
-            print(state.read_text() if state.exists() else "家庭试用尚未启动。")
+            print(json.dumps(snapshot(), indent=2, ensure_ascii=False))
+        elif args.action == "logs":
+            show_logs(args.component, args.follow, max(1, args.lines))
         else:
             supervisor = Supervisor(load_environment())
             supervisor.acquire()
@@ -427,6 +614,8 @@ def main():
             supervisor.prepare()
             supervisor.launch()
     except (TrialError, OSError) as error:
+        if supervisor and not supervisor.stopping:
+            supervisor.failure = str(error)
         print(f"家庭试用：{error}", file=sys.stderr, flush=True)
         return 0 if supervisor and supervisor.stopping else 1
     finally:

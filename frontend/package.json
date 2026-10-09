@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:requests": "node scripts/test-requests.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

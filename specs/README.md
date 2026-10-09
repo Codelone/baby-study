@@ -56,9 +56,10 @@ specs/
 | 001 | Spec 与 Plan 维护流程 | implemented | v0.1 | [spec](001-spec-plan-workflow/spec.md) | [plan](001-spec-plan-workflow/plan.md) |
 | 002 | 系列分组与批量加入书架 | implemented | v0.1 | [spec](002-series-shelf/spec.md) | [plan](002-series-shelf/plan.md) |
 | 003 | 图书资料重设计与全表联网补全 | implemented | v0.1 | [spec](003-catalog-enrichment/spec.md) | [plan](003-catalog-enrichment/plan.md) |
-| 004 | 系统图书管理、拍照录入与 MiMo 模型接入 | in-progress | v0.5 | [spec](004-catalog-management-ai/spec.md) | [plan](004-catalog-management-ai/plan.md) |
-| 005 | Cloudflare 家庭试用部署 | in-progress | v0.1 | [spec](005-family-cloudflare-trial/spec.md) | [plan](005-family-cloudflare-trial/plan.md) |
+| 004 | 系统图书管理、拍照录入与 MiMo 模型接入 | in-progress | v0.6 | [spec](004-catalog-management-ai/spec.md) | [plan](004-catalog-management-ai/plan.md) |
+| 005 | Cloudflare 家庭试用部署 | in-progress | v0.2 | [spec](005-family-cloudflare-trial/spec.md) | [plan](005-family-cloudflare-trial/plan.md) |
 | 006 | 系列图书维护 | implemented | v0.1 | [spec](006-series-management/spec.md) | [plan](006-series-management/plan.md) |
+| 007 | 照片录入测试、性能排查与服务整理 | in-progress | v0.1 | [spec](007-photo-intake-diagnostics/spec.md) | [plan](007-photo-intake-diagnostics/plan.md) |
 | 008 | 仓库指南更新与代码提交约束 | implemented | v0.2 | [spec](008-agent-guidelines/spec.md) | [plan](008-agent-guidelines/plan.md) |
 
 2026-09-29：003 已追加后续新增图书联网能力的澄清。当前新增图书不自动联网；系统内检索候选并确认版本的入口为 Agent 建议，尚未确认或实施，v0.1 范围和状态不变。
@@ -78,6 +79,8 @@ specs/
 2026-09-29 部署：005 v0.1/in-progress。用户确认本机 Cloudflare Quick Tunnel、无域名/服务器、大陆家人共用账户试用并要求实施。部署已运行，数据库备份、260 后端测试、3 进程管理测试、真实公网 HTTPS 登录/CSRF/书架/评估/私有照片以及停止重启通过；实物照片完整识别和大陆手机移动网络待验收。详见 [验收记录](005-family-cloudflare-trial/validation.md)。
 
 2026-09-29：006 v0.1/implemented。系列资料、成员关联/移出/排序及手工/照片系列归属已实现。283 项后端测试和全部前端检查通过，桌面及手机模拟视口验证通过；现有试用地址保持不变。未新增真实供应商识别或物理手机相机验证，004/005 对应的待验收事项继续保留。详见 [验收记录](006-series-management/validation.md)。
+
+2026-09-29：007 v0.1/in-progress，功能和研发验证已完成：291后端测试、9部署测试、9请求层故障场景、前端检查及真实实物照片/公网幂等上传/停止重启通过。保留一套后台服务，实物识别约13秒；物理手机新入口/网络反馈待补，旧Batch继续等待。见[007验收](007-photo-intake-diagnostics/validation.md)。
 
 2026-09-29：008 v0.1/implemented。更新 AGENTS.md 的当前目录、命令、测试和部署信息，新增提交范围、验证、敏感文件、授权与历史保护约束。具体规则为 Agent 设计，默认仅明确要求时 commit/push；差异、31 个本地链接、原文/版本/编号及既有改动保护核验通过，本轮未提交或推送。
 

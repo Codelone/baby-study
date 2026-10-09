@@ -58,7 +58,7 @@
 - `GET /catalog-capabilities` -> `{can_manage_catalog, realtime_configured, batch_configured}`，均 boolean，绝不返回密钥。
 - `POST /books` JSON `{fields, idempotency_key?, add_to_shelf?}` -> `{book: BookDetail, created: boolean}`；管理员。`DELETE /books/{id}` -> 204，幂等归档。
 - `GET /books/{id}` 对活动书返回详情；归档书仅已有拥有者可读。归档后已有拥有者可以更新/移出书架，其他家庭不能新增该归档书；私有照片仍不在公开详情中返回。
-- `POST /book-intakes` multipart，多次 files 字段，mode 默认 batch；响应 201 `{intake: Intake}`。仅写上传/任务，不在请求中长时间等模型；独立 worker 处理 batch/realtime。
+- `POST /book-intakes` multipart，多次 files 字段，mode 默认 realtime；新增可选 UUID idempotency_key（同用户键和内容相同重试返回200原任务，内容冲突409 submission_conflict）；首次响应 201 `{intake: Intake}`。仅写上传/任务，不在请求中长时间等模型；独立 worker 处理 batch/realtime。
 - `GET /book-intakes` -> `{intakes: Intake[]}`；`GET /book-intakes/{uuid}` -> `{intake: Intake}`。
 - `GET /book-intakes/{uuid}/photos/{photo_uuid}` -> 已验证图片二进制，管理员及所有者校验；过期已清理则 404。
 - `PATCH /book-intakes/{uuid}/groups` JSON `{revision, groups, unassigned_photo_ids}` -> `{intake: Intake}`；photo_ids 必须属于任务且不重复，冲突 revision 返回 409 `revision_conflict`。
@@ -77,3 +77,5 @@ worker 命令：`process_book_intakes --once` 或持续处理。queued 实时任
 ## 验证与交付
 
 每个会话提交自己负责文件并报告 commit SHA、工作树、测试结果。使用根项目共享 .venv/Node 依赖（不得输出 .env）；数据库测试可能使用独立 TEST NAME，避免并发争用 test_baby_study。不要修改 spec/plan；涉及需求变化或需要用户确认时发给主会话。只有主会话进行真实 API 调用、迁移和集成验证，不暴露 API_KEY。Batch 地址待用户提供时继续实现/离线测试，不假造真实通过。
+
+2026-09-29 v0.6/007补充：新任务默认实时；旧Batch模式不变。worker默认 --interval 5 --batch-interval 60，新任务先处理。普通HTTP请求超时30秒，上传120秒，响应带X-Request-ID用于诊断。

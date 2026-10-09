@@ -219,7 +219,7 @@ class BookIntake(models.Model):
         BookSeries, null=True, blank=True, on_delete=models.PROTECT, related_name="intakes"
     )
     mode = models.CharField(
-        max_length=16, choices=(("batch", "省钱批量"), ("realtime", "实时")), default="batch"
+        max_length=16, choices=(("batch", "省钱批量"), ("realtime", "实时")), default="realtime"
     )
     status = models.CharField(max_length=32, default="queued")
     revision = models.PositiveIntegerField(default=1)
@@ -233,11 +233,18 @@ class BookIntake(models.Model):
     has_manual_edits = models.BooleanField(default=False)
     lease_expires_at = models.DateTimeField(null=True, blank=True)
     lease_token = models.UUIDField(null=True, blank=True)
+    idempotency_key = models.UUIDField(null=True, blank=True)
+    submission_fingerprint = models.CharField(max_length=64, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ("-created_at",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=("user", "idempotency_key"), name="unique_intake_submission"
+            ),
+        ]
 
 
 def intake_photo_path(instance, filename):

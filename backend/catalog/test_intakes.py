@@ -129,14 +129,14 @@ class IntakeTestHelpers:
 
 @override_settings(PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"])
 class IntakeTests(IntakeTestHelpers, TestCase):
-    def test_upload_defaults_batch_and_removes_duplicate_photos(self):
+    def test_upload_defaults_realtime_and_removes_duplicate_photos(self):
         files = [
             SimpleUploadedFile(name, picture(), content_type="image/jpeg")
             for name in ["first.jpg", "second.jpg"]
         ]
         response = self.upload(files)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data["intake"]["mode"], "batch")
+        self.assertEqual(response.data["intake"]["mode"], "realtime")
         self.assertEqual(len(response.data["intake"]["photos"]), 1)
         self.assertEqual(response.data["intake"]["groups"], [])
 
@@ -482,7 +482,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertEqual(Book.objects.count(), before)
 
     def test_batch_submission_and_out_of_order_partial_result_mapping(self):
-        intake = BookIntake.objects.create(user=self.admin)
+        intake = BookIntake.objects.create(user=self.admin, mode="batch")
         first = self.photo(intake)
         second = self.photo(intake, "blue")
         self.provider.submit.return_value = {
@@ -525,7 +525,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertNotIn("untrusted-provider-message", json.dumps(intake.errors))
 
     def test_retry_submits_only_failed_photo(self):
-        intake = BookIntake.objects.create(user=self.admin, status="partial_failure")
+        intake = BookIntake.objects.create(user=self.admin, mode="batch", status="partial_failure")
         failed = self.photo(intake, status="failed")
         self.photo(
             intake,
@@ -542,7 +542,9 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertIn(str(failed.id), requests[0]["custom_id"])
 
     def test_cancellation_ignores_late_result_and_cancels_remote_job(self):
-        intake = BookIntake.objects.create(user=self.admin, status="cancelled", generation=2)
+        intake = BookIntake.objects.create(
+            user=self.admin, mode="batch", status="cancelled", generation=2
+        )
         photo = self.photo(intake, status="processing")
         job = IntakeBatch.objects.create(
             intake=intake,
@@ -565,7 +567,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.provider.results.assert_not_called()
 
     def test_unknown_submission_is_not_blindly_retried(self):
-        intake = BookIntake.objects.create(user=self.admin)
+        intake = BookIntake.objects.create(user=self.admin, mode="batch")
         self.photo(intake)
         self.provider.submit.side_effect = ModelAPIError("submission_unknown")
         run_once()
@@ -580,7 +582,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertEqual(self.provider.submit.call_count, 1)
 
     def test_output_download_retry_does_not_resubmit_inference(self):
-        intake = BookIntake.objects.create(user=self.admin, status="processing")
+        intake = BookIntake.objects.create(user=self.admin, mode="batch", status="processing")
         photo = self.photo(intake, status="processing")
         job = IntakeBatch.objects.create(
             intake=intake,
@@ -625,7 +627,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         with patch(
             "ai.batch.BatchClient.from_settings", side_effect=ModelAPIError("batch_not_configured")
         ):
-            intake = BookIntake.objects.create(user=self.admin)
+            intake = BookIntake.objects.create(user=self.admin, mode="batch")
             photo = self.photo(intake)
             run_once()
         intake.refresh_from_db()
@@ -696,13 +698,13 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertIsNotNone(intake.lease_expires_at)
 
     def test_queued_intake_with_active_poll_lease_is_not_claimed(self):
-        intake = BookIntake.objects.create(user=self.admin)
+        intake = BookIntake.objects.create(user=self.admin, mode="batch")
         job = IntakeBatch.objects.create(intake=intake, generation=0)
         self.assertTrue(claim_poll(job))
         self.assertIsNone(claim_next())
 
     def test_first_submission_terminal_status_still_consumes_results(self):
-        intake = BookIntake.objects.create(user=self.admin)
+        intake = BookIntake.objects.create(user=self.admin, mode="batch")
         photo = self.photo(intake)
         self.provider.submit.return_value = {"id": "instant-failure", "status": "failed"}
         run_once()
@@ -715,7 +717,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertEqual(photo.status, "failed")
 
     def test_poll_transport_failure_is_visible_and_does_not_resubmit_inference(self):
-        intake = BookIntake.objects.create(user=self.admin, status="processing")
+        intake = BookIntake.objects.create(user=self.admin, mode="batch", status="processing")
         job = IntakeBatch.objects.create(
             intake=intake, generation=1, provider_batch_id="waiting-batch", status="validating"
         )
@@ -732,7 +734,7 @@ class IntakeWorkerTests(IntakeTestHelpers, TestCase):
         self.assertEqual(intake.errors, [])
 
     def test_known_batch_id_after_uncertain_submit_is_reconciled_without_resubmission(self):
-        intake = BookIntake.objects.create(user=self.admin)
+        intake = BookIntake.objects.create(user=self.admin, mode="batch")
         photo = self.photo(intake)
         uncertain = ModelAPIError("submission_unknown")
         uncertain.provider_batch_id = "known-batch"

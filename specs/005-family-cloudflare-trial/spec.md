@@ -4,7 +4,7 @@
 | --- | --- |
 | 需求 ID | 005-family-cloudflare-trial |
 | 状态 | in-progress |
-| 版本 | v0.1 |
+| 版本 | v0.2 |
 | 创建日期 | 2026-09-29 |
 | 更新日期 | 2026-09-29 |
 | 实施计划 | [plan.md](plan.md) |
@@ -72,3 +72,9 @@
 - [Cloudflare 上传限制](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-413/)
 - [Django 部署检查](https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/)
 - [004 拍照录入](../004-catalog-management-ai/spec.md)
+
+## 2026-09-29 后续用户确认（v0.2）
+
+007补充5秒新任务调度、IPv4/HTTP2、日志轮转/状态诊断和失效检测；清理后保留唯一后台部署。详见 [007 Spec](../007-photo-intake-diagnostics/spec.md) 和 [Plan](../007-photo-intake-diagnostics/plan.md)。原始需求及此前验收证据保留，新增验收由007管理。
+
+2026-09-29：007实现及研发验收完成。实物两张照片实时识别已通过并保持待确认，独立拍照入口合并为多选上传；日志/状态/停止重启和公网同任务重试已验证。历史Batch及物理手机的新入口验证继续保留，详见[007验证记录](../007-photo-intake-diagnostics/validation.md)。

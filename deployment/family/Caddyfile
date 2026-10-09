@@ -1,39 +1,50 @@
 {
-  admin off
-  auto_https off
+	admin off
+	auto_https off
 }
 
 http://:8080 {
-  bind 127.0.0.1
+	bind 127.0.0.1
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>headers delete
+				resp_headers delete
+			}
+		}
+	}
+	log_append request_id {http.response.header.X-Request-ID}
 
-  @trial host {$FAMILY_TRIAL_HOST}
-  handle @trial {
-    encode gzip
+	@trial host {$FAMILY_TRIAL_HOST}
+	handle @trial {
+		encode gzip
 
-    @backend path /baby/study /baby/study/* /admin /admin/*
-    handle @backend {
-      reverse_proxy 127.0.0.1:8000 {
-        header_up X-Forwarded-Proto https
-        header_up -X-Forwarded-Host
-      }
-    }
+		@backend path /baby/study /baby/study/* /admin /admin/*
+		handle @backend {
+			reverse_proxy 127.0.0.1:8000 {
+				header_up X-Forwarded-Proto https
+				header_up -X-Forwarded-Host
+			}
+		}
 
-    handle_path /static/* {
-      root * {$FAMILY_TRIAL_ROOT}/backend/staticfiles
-      file_server
-    }
+		handle_path /static/* {
+			root * {$FAMILY_TRIAL_ROOT}/backend/staticfiles
+			file_server
+		}
 
-    @hidden path_regexp hidden (^|/)\.
-    handle @hidden {
-      respond 404
-    }
+		@hidden path_regexp hidden (^|/)\.
+		handle @hidden {
+			respond 404
+		}
 
-    handle {
-      root * {$FAMILY_TRIAL_ROOT}/frontend/dist
-      try_files {path} /index.html
-      file_server
-    }
-  }
+		handle {
+			root * {$FAMILY_TRIAL_ROOT}/frontend/dist
+			try_files {path} /index.html
+			file_server
+		}
+	}
 
-  respond "Unknown trial hostname" 404
+	respond "Unknown trial hostname" 404
 }

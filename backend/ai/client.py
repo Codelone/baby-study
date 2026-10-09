@@ -18,6 +18,8 @@ from urllib.parse import urlparse
 import requests
 from django.conf import settings
 
+from config.observability import event
+
 DEFAULT_MODEL = "mimo-v2.6-flash"
 DEFAULT_BASE_URL = "https://api.xiaomimimo.com/v1"
 MAX_BASE64_LENGTH = 50 * 1024 * 1024
@@ -380,6 +382,10 @@ class MimoClient:
         if not self._api_key.strip():
             raise ModelAPIError("not_configured")
         for attempt in range(self.max_retries + 1):
+            started = time.perf_counter()
+            event(
+                "model_attempt_started", stage=capability, model=body["model"], attempt=attempt + 1
+            )
             response = None
             error = None
             try:
@@ -398,6 +404,19 @@ class MimoClient:
                 error = ModelAPIError("connection_error", retryable=True)
             except requests.RequestException:
                 error = ModelAPIError("transport_error")
+            event(
+                "model_attempt",
+                stage=capability,
+                model=body["model"],
+                attempt=attempt + 1,
+                status=response.status_code if response is not None else None,
+                error_code=error.code
+                if error
+                else self._http_error(response.status_code).code
+                if response is not None and response.status_code != 200
+                else None,
+                elapsed_ms=round((time.perf_counter() - started) * 1000, 2),
+            )
             if response is not None:
                 status = response.status_code
                 if status == 200:

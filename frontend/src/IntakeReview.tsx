@@ -887,6 +887,16 @@ export default function IntakeReview({
       </p>
       {running && (
         <>
+          <p role="status" className="question-hint">
+            {intake.processing_stage === 'queued'
+              ? '等待后台接收任务'
+              : intake.processing_stage === 'realtime_recognition'
+                ? '正在实时识别照片'
+                : intake.processing_stage === 'batch_submission'
+                  ? '正在提交 Batch'
+                  : '等待供应商 Batch 结果'}
+            {intake.batch_status ? ' · 供应商状态：' + intake.batch_status : ''}
+          </p>
           <progress
             max={Math.max(1, intake.photos.length)}
             value={finished}
